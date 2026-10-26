@@ -1,0 +1,104 @@
+# ========================================================
+# RPG Legends — Flask Application .gitignore
+# Protege segredos, banco de dados local, cache e builds
+# ========================================================
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+*.pyd
+*.pdb
+.Python
+
+# --- Ambientes Virtuais ---
+.venv/
+venv/
+env/
+ENV/
+.env/
+.virtualenv/
+
+# --- Variáveis de Ambiente & Segredos ---
+.env
+.env.*
+!.env.example
+*.env
+secrets.py
+config_local.py
+
+# --- Banco de Dados Local (SQLite) ---
+*.db
+*.sqlite
+*.sqlite3
+rpg.db
+test_*.db
+
+# --- Flask / Werkzeug ---
+instance/
+flask_session/
+.flask_session/
+
+# --- Pytest & Testes ---
+.pytest_cache/
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+nosetests.xml
+test_auth_db.py
+
+# --- IDE / Editor ---
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# --- Sistema Operacional ---
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+desktop.ini
+
+# --- Logs ---
+*.log
+logs/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# --- Distribuição / Build ---
+dist/
+build/
+*.egg-info/
+*.egg
+MANIFEST
+.eggs/
+
+# --- Jupyter / IPython ---
+.ipynb_checkpoints/
+*.ipynb
+
+# --- Heroku / Render / Deploy ---
+.heroku/
+
+# --- Node (caso use npm para build de assets) ---
+node_modules/
+package-lock.json
+yarn.lock
+
+# --- Arquivos Temporários / Debug ---
+*.tmp
+*.bak
+*.orig
+*.rej
+scratch/
+

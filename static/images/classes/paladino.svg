@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <circle cx="50" cy="50" r="46" fill="#0f192b" stroke="#f1c40f" stroke-width="3"/>
+  <!-- Golden Cross Halo -->
+  <rect x="47" y="12" width="6" height="26" fill="#f1c40f" opacity="0.7"/>
+  <rect x="37" y="20" width="26" height="6" fill="#f1c40f" opacity="0.7"/>
+  <!-- Knight Visor Helmet -->
+  <path d="M30 42 C30 26 40 22 50 22 C60 22 70 26 70 42 L68 64 C68 74 58 78 50 78 C42 78 32 74 32 64 Z" fill="#bdc3c7" stroke="#f39c12" stroke-width="2.5"/>
+  <!-- Visor Slit (Holy Light) -->
+  <rect x="36" y="44" width="28" height="5" rx="2" fill="#f1c40f"/>
+  <line x1="50" y1="40" x2="50" y2="54" stroke="#7f8c8d" stroke-width="2"/>
+  <!-- Gorget / Collar -->
+  <path d="M34 68 L50 82 L66 68 Z" fill="#95a5a6" stroke="#f39c12" stroke-width="2"/>
+</svg>

@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RPG Legends - Reino dos Campeões</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Exo+2:ital,wght@0,400;0,600;0,700;0,800;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+    <!-- OVERLAY / MODAL DE AUTENTICAÇÃO (LOGIN / REGISTRO COM SQLALCHEMY & FLASK-LOGIN) -->
+    <div id="authModalOverlay" class="creation-overlay hidden">
+        <div class="creation-modal auth-modal">
+            <div class="creation-header">
+                <h2>🛡️ ACESSO AO REINO 🛡️</h2>
+                <p>Entre com sua conta persistente ou crie um novo campeão</p>
+            </div>
+
+            <!-- TABS DE AUTH -->
+            <div class="auth-tabs">
+                <button type="button" class="auth-tab-btn active" id="tabAuthLogin" onclick="switchAuthTab('login')">🔑 Entrar</button>
+                <button type="button" class="auth-tab-btn" id="tabAuthRegister" onclick="switchAuthTab('register')">✨ Criar Conta</button>
+            </div>
+
+            <div id="authErrorMessage" class="auth-error hidden"></div>
+
+            <!-- FORM LOGIN -->
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="loginUsername">Nome de Usuário:</label>
+                    <input type="text" id="loginUsername" required placeholder="Digite seu usuário" autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Senha:</label>
+                    <input type="password" id="loginPassword" required placeholder="Digite sua senha" autocomplete="current-password">
+                </div>
+                <button type="submit" class="btn btn-primary btn-large btn-glow" style="margin-top: 15px;">
+                    ⚔️ Entrar no Jogo
+                </button>
+            </form>
+
+            <!-- FORM REGISTER -->
+            <form id="registerForm" class="hidden" onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label for="regUsername">Nome de Usuário:</label>
+                    <input type="text" id="regUsername" required placeholder="Mínimo 3 caracteres" autocomplete="username" minlength="3">
+                </div>
+                <div class="form-group">
+                    <label for="regPassword">Senha:</label>
+                    <input type="password" id="regPassword" required placeholder="Mínimo 4 caracteres" autocomplete="new-password" minlength="4">
+                </div>
+                <button type="submit" class="btn btn-warning btn-large btn-glow" style="margin-top: 15px;">
+                    🌟 Registrar Conta
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- OVERLAY / MODAL DE CRIAÇÃO DE PERSONAGEM (8 CLASSES) -->
+    <div id="characterCreationOverlay" class="creation-overlay hidden">
+        <div class="creation-modal">
+            <div class="creation-header">
+                <h2>⚔️ CRIAÇÃO DO CAMPEÃO ⚔️</h2>
+                <p>Escolha sua vocação entre 8 classes lendárias e forje sua lenda</p>
+            </div>
+            
+            <form id="creationForm" onsubmit="handleCharacterCreate(event)">
+                <div class="form-group">
+                    <label for="heroName">Nome do Herói:</label>
+                    <input type="text" id="heroName" required placeholder="Ex: Valerius" maxlength="20">
+                </div>
+
+                <label>Selecione sua Classe:</label>
+                <div class="classes-grid" id="classSelectionGrid">
+                    <!-- Gerado dinamicamente via JS -->
+                </div>
+                <input type="hidden" id="selectedClass" required>
+
+                <label style="margin-top: 15px;">Selecione sua Arma Inicial:</label>
+                <div class="weapons-grid" id="weaponSelectionGrid">
+                    <!-- Gerado dinamicamente via JS -->
+                </div>
+                <input type="hidden" id="selectedWeapon" required>
+
+                <button type="submit" class="btn btn-primary btn-large btn-glow" style="margin-top: 25px;">
+                    ✨ Despertar Herói & Entrar no Mundo
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MAIN APP CONTAINER -->
+    <div class="app-layout" id="gameApp">
+        
+        <!-- HUD GLOBAL (CABEÇALHO PERSISTENTE) -->
+        <header class="hud-global" id="globalHud">
+            <div class="hud-left">
+                <div class="avatar-box">
+                    <img id="hudAvatarImg" src="/static/images/classes/guerreiro.svg" alt="Avatar">
+                    <span id="hudClassIcon" class="avatar-badge">🛡️</span>
+                </div>
+                <div class="hero-identity">
+                    <div class="hero-name-row">
+                        <h2 id="hudHeroName">Herói</h2>
+                        <span id="hudHeroClass" class="badge-class">Classe</span>
+                        <span id="hudHeroLevel" class="badge-level">Lvl 1</span>
+                        <span id="hudCurrentRegion" class="badge-region" title="Região Atual">🌲 Floresta</span>
+                    </div>
+                    <!-- BARRA DE XP -->
+                    <div class="bar-container xp-container" title="Progresso para o próximo nível">
+                        <div class="bar-labels">
+                            <span>EXP</span>
+                            <span id="hudXpNumbers">0 / 60</span>
+                        </div>
+                        <div class="bar-track">
+                            <div id="hudXpFill" class="bar-fill xp-fill" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STATUS DE HP E BÔNUS TEMPORÁRIO -->
+            <div class="hud-center">
+                <!-- BARRA DE HP -->
+                <div class="bar-container hp-container">
+                    <div class="bar-labels">
+                        <span>❤️ Vida (HP)</span>
+                        <span id="hudHpNumbers">100 / 100</span>
+                    </div>
+                    <div class="bar-track">
+                        <div id="hudHpFill" class="bar-fill hp-fill" style="width: 100%;"></div>
+                    </div>
+                </div>
+
+                <div id="hudBuffBadge" class="hud-buff hidden" title="Bônus temporário da expedição">
+                    ⚡ Buff: +<span id="buffAtq">0</span> Atq | +<span id="buffDef">0</span> Def | +<span id="buffHp">0</span> HP
+                </div>
+            </div>
+
+            <div class="hud-right">
+                <div class="stat-pill" title="Ataque Total">
+                    <span class="stat-icon">⚔️</span>
+                    <div class="stat-data">
+                        <span class="stat-title">Ataque</span>
+                        <strong id="hudTotalAtk">0</strong>
+                    </div>
+                </div>
+                <div class="stat-pill" title="Defesa Total">
+                    <span class="stat-icon">🛡️</span>
+                    <div class="stat-data">
+                        <span class="stat-title">Defesa</span>
+                        <strong id="hudTotalDef">0</strong>
+                    </div>
+                </div>
+                <div class="stat-pill" title="Chance de Esquiva">
+                    <span class="stat-icon">💨</span>
+                    <div class="stat-data">
+                        <span class="stat-title">Esquiva</span>
+                        <strong id="hudTotalDodge">5%</strong>
+                    </div>
+                </div>
+                <div class="stat-pill" title="Chance de Crítico">
+                    <span class="stat-icon">⚡</span>
+                    <div class="stat-data">
+                        <span class="stat-title">Crítico</span>
+                        <strong id="hudTotalCrit">10%</strong>
+                    </div>
+                </div>
+                <div class="stat-pill gold-pill" title="Moedas de Ouro">
+                    <span class="stat-icon">🪙</span>
+                    <div class="stat-data">
+                        <span class="stat-title">Moedas</span>
+                        <strong id="hudGold">0</strong>
+                    </div>
+                </div>
+                <div class="stat-pill dust-pill" title="Poeira Arcana para Ferreiro e Upgrades">
+                    <span class="stat-icon">🔮</span>
+                    <div class="stat-data">
+                        <span class="stat-title">Poeira</span>
+                        <strong id="hudDust">0</strong>
+                    </div>
+                </div>
+                <div class="stat-pill potion-pill" onclick="quickUsePotion()" title="Usar Poção (+50 HP)">
+                    <span class="stat-icon">🧪</span>
+                    <div class="stat-data">
+                        <span class="stat-title">Poções</span>
+                        <strong id="hudPotions">0</strong>
+                    </div>
+                </div>
+                <div class="stat-pill user-pill" id="hudUserPill" title="Usuário Conectado">
+                    <span class="stat-icon">👤</span>
+                    <div class="stat-data">
+                        <span class="stat-title">Conta</span>
+                        <strong id="hudAuthUsername">-</strong>
+                    </div>
+                </div>
+                <button class="btn btn-sm btn-outline-secondary" onclick="handleLogout()" title="Sair da Conta">
+                    🚪 Sair
+                </button>
+                <button class="btn btn-sm btn-outline-danger" onclick="confirmResetGame()" title="Reiniciar Herói">
+                    🔄 Reset
+                </button>
+            </div>
+        </header>
+
+        <!-- NAVEGAÇÃO POR ABAS (STYLE HERO ZERO & SHAKES & FIDGET) -->
+        <nav class="tabs-nav">
+            <button class="tab-btn active" id="tabBtnAventura" onclick="switchTab('aventura')">
+                <span class="tab-icon">🏹</span>
+                <span class="tab-text">Aventura</span>
+                <span class="tab-sub" id="waveSubBadge">Onda 1</span>
+            </button>
+            <button class="tab-btn" id="tabBtnMasmorra" onclick="switchTab('masmorra')">
+                <span class="tab-icon">💀</span>
+                <span class="tab-text">Masmorra</span>
+                <span class="tab-sub" id="dungeonSubBadge">Andar 1</span>
+            </button>
+            <button class="tab-btn" id="tabBtnPerfil" onclick="switchTab('perfil')">
+                <span class="tab-icon">👤</span>
+                <span class="tab-text">Personagem</span>
+                <span class="tab-sub" id="invSubBadge">Status & Mochila</span>
+            </button>
+            <button class="tab-btn" id="tabBtnEsconderijo" onclick="switchTab('esconderijo')">
+                <span class="tab-icon">🏰</span>
+                <span class="tab-text">Esconderijo</span>
+                <span class="tab-sub" id="qgSubBadge">Produção Idle</span>
+            </button>
+            <button class="tab-btn" id="tabBtnRoleta" onclick="switchTab('roleta')">
+                <span class="tab-icon">🎰</span>
+                <span class="tab-text">Roleta da Sorte</span>
+                <span class="tab-sub" id="spinSubBadge">1 Giro Grátis</span>
+            </button>
+            <button class="tab-btn" id="tabBtnMapa" onclick="switchTab('mapa')">
+                <span class="tab-icon">🗺️</span>
+                <span class="tab-text">Mapa</span>
+                <span class="tab-sub">4 Regiões</span>
+            </button>
+            <button class="tab-btn" id="tabBtnTreino" onclick="switchTab('treino')">
+                <span class="tab-icon">⏱️</span>
+                <span class="tab-text">Treinamento</span>
+                <span class="tab-sub" id="trainSubBadge">Inativo</span>
+            </button>
+            <button class="tab-btn" id="tabBtnLoja" onclick="switchTab('loja')">
+                <span class="tab-icon">🛒</span>
+                <span class="tab-text">Loja</span>
+                <span class="tab-sub" id="shopSubBadge">4 Itens</span>
+            </button>
+        </nav>
+
+        <!-- CONTEÚDO PRINCIPAL DAS ABAS -->
+        <main class="tabs-content">
+
+            <!-- ============================================== -->
+            <!-- ABA 1: AVENTURA (MODO ONDAS + DAMAGE FLOATERS) -->
+            <!-- ============================================== -->
+            <section id="tabContentAventura" class="tab-pane active">
+                <div class="adventure-container">
+                    
+                    <div class="wave-header-card">
+                        <div class="wave-indicator">
+                            <span class="wave-label">REGIÃO: <strong id="advRegionName">Floresta dos Goblins</strong></span>
+                            <h3 id="advWaveTitle">Onda 1</h3>
+                        </div>
+                        <div class="loot-chest-preview">
+                            <div class="loot-item">
+                                <span class="loot-icon">🪙</span>
+                                <div><small>Espólio Moedas</small><strong id="advLootGold">0</strong></div>
+                            </div>
+                            <div class="loot-item">
+                                <span class="loot-icon">✨</span>
+                                <div><small>Espólio XP</small><strong id="advLootXp">0</strong></div>
+                            </div>
+                        </div>
+                        <div class="wave-actions-right">
+                            <button id="btnAdvRetreat" class="btn btn-warning" onclick="retreatAdventure()">
+                                🏃 Recuar com Espólio
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- ESTADO IDLE / NÃO INICIADO -->
+                    <div id="advIdlePanel" class="adv-idle-box">
+                        <div class="idle-graphic" id="idleRegionIcon">🌲</div>
+                        <h3 id="idleRegionTitle">Acampamento de Expedição</h3>
+                        <p id="idleRegionDesc">Enfrente ondas sequenciais de monstros e acumule ouro, experiência e <strong>chance de 30% de Loot Drop direto para sua mochila</strong>!</p>
+                        <button class="btn btn-primary btn-large btn-glow" onclick="startAdventure()">
+                            ⚔️ Iniciar Expedição nesta Região (Onda 1)
+                        </button>
+                    </div>
+
+                    <!-- ARENA DE COMBATE COM DAMAGE FLOATERS E SCREEN SHAKE -->
+                    <div id="advBattlePanel" class="adv-battle-box hidden">
+                        <div class="arena-visual" id="adventureArenaVisual">
+                            <!-- PLAYER CARD -->
+                            <div class="combatant-card player-card" id="playerCombatCard">
+                                <div class="floater-container" id="playerFloaterBox"></div>
+                                <div class="combatant-avatar-wrap">
+                                    <img id="advPlayerImg" src="/static/images/classes/guerreiro.svg" alt="Player">
+                                </div>
+                                <h4 id="advPlayerName">Herói</h4>
+                                <div class="combatant-hp">
+                                    <div class="hp-bar-track">
+                                        <div id="advPlayerHpFill" class="hp-bar-fill" style="width: 100%;"></div>
+                                    </div>
+                                    <small id="advPlayerHpText">100 / 100 HP</small>
+                                </div>
+                                <div class="combatant-passives" id="advPlayerPassive">Passiva Ativa</div>
+                            </div>
+
+                            <div class="versus-divider">
+                                <span class="vs-text">VS</span>
+                                <div class="pulse-ring"></div>
+                            </div>
+
+                            <!-- ENEMY CARD -->
+                            <div class="combatant-card enemy-card" id="enemyCombatCard">
+                                <div class="floater-container" id="enemyFloaterBox"></div>
+                                <div class="combatant-avatar-wrap">
+                                    <img id="advEnemyImg" src="/static/images/enemies/goblin.svg" alt="Inimigo">
+                                </div>
+                                <h4 id="advEnemyName">Inimigo</h4>
+                                <div class="combatant-hp">
+                                    <div class="hp-bar-track">
+                                        <div id="advEnemyHpFill" class="hp-bar-fill enemy-fill" style="width: 100%;"></div>
+                                    </div>
+                                    <small id="advEnemyHpText">40 / 40 HP</small>
+                                </div>
+                                <div class="combatant-passives enemy-power" id="advEnemyPower">Poder do Inimigo</div>
+                            </div>
+                        </div>
+
+                        <!-- CONTROLES -->
+                        <div class="combat-controls-panel">
+                            <div id="combatTurnActions" class="actions-row">
+                                <button class="btn btn-danger btn-action" onclick="adventureAction('atacar')">
+                                    ⚔️ Atacar
+                                </button>
+                                <button class="btn btn-success btn-action" onclick="adventureAction('pocao')">
+                                    🧪 Poção (<span id="advPotionCount">3</span>)
+                                </button>
+                                <button class="btn btn-secondary btn-action" onclick="retreatAdventure()">
+                                    🏃 Fugir c/ Espólio
+                                </button>
+                            </div>
+
+                            <div id="combatWaveWonActions" class="actions-row hidden">
+                                <button class="btn btn-primary btn-large btn-glow" onclick="adventureAction('proxima_onda')">
+                                    ⏩ Avançar para Onda <span id="nextWaveNum">2</span> ➔
+                                </button>
+                                <button class="btn btn-warning btn-large" onclick="retreatAdventure()">
+                                    💰 Resgatar Espólio e Retornar
+                                </button>
+                            </div>
+
+                            <div id="combatDefeatActions" class="actions-row hidden">
+                                <div class="defeat-banner">
+                                    💀 Você caiu em combate! O espólio conquistado foi resgatado com segurança.
+                                </div>
+                                <button class="btn btn-primary btn-large" onclick="startAdventure()">
+                                    🔄 Tentar Novamente (Onda 1)
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- LOGS -->
+                    <div class="combat-log-wrapper">
+                        <div class="log-header">
+                            <span>📜 Diário de Batalha & Loot Drop</span>
+                            <button class="btn-clear-logs" onclick="clearLocalLogs()">Limpar visualização</button>
+                        </div>
+                        <div class="combat-log-box" id="combatLogBox"></div>
+                    </div>
+
+                </div>
+            </section>
+
+
+            <!-- ============================================== -->
+            <!-- ABA 2: MASMORRA (TORRE DOS 20 CHEFES)          -->
+            <!-- ============================================== -->
+            <section id="tabContentMasmorra" class="tab-pane">
+                <div class="dungeon-container">
+                    
+                    <div class="dungeon-header-card">
+                        <div>
+                            <h3>💀 A Masmorra dos 20 Titãs</h3>
+                            <p>Enfrente chefes colossais andar por andar. Cada andar conquistado concede um <strong>Baú Lendário</strong> com equipamento Épico/Lendário garantido!</p>
+                        </div>
+                        <div class="dungeon-progress-pill">
+                            <span>Andar Atual:</span>
+                            <strong id="dungeonFloorHeader">Andar 1 / 20</strong>
+                        </div>
+                    </div>
+
+                    <!-- ARENA DO CHEFE DA MASMORRA -->
+                    <div id="dungeonBattlePanel" class="dungeon-battle-panel hidden">
+                        <div class="arena-visual dungeon-arena" id="dungeonArenaVisual">
+                            <!-- PLAYER CARD -->
+                            <div class="combatant-card player-card" id="dungeonPlayerCard">
+                                <div class="floater-container" id="dungeonPlayerFloaterBox"></div>
+                                <div class="combatant-avatar-wrap">
+                                    <img id="dungeonPlayerImg" src="/static/images/classes/guerreiro.svg" alt="Player">
+                                </div>
+                                <h4 id="dungeonPlayerName">Herói</h4>
+                                <div class="combatant-hp">
+                                    <div class="hp-bar-track">
+                                        <div id="dungeonPlayerHpFill" class="hp-bar-fill" style="width: 100%;"></div>
+                                    </div>
+                                    <small id="dungeonPlayerHpText">100 / 100 HP</small>
+                                </div>
+                            </div>
+
+                            <div class="versus-divider">
+                                <span class="vs-text">VS</span>
+                                <div class="pulse-ring"></div>
+                            </div>
+
+                            <!-- BOSS CARD -->
+                            <div class="combatant-card enemy-card" id="dungeonBossCard">
+                                <div class="floater-container" id="dungeonBossFloaterBox"></div>
+                                <div class="combatant-avatar-wrap boss-avatar">
+                                    <img id="dungeonBossImg" src="/static/images/enemies/goblin.svg" alt="Chefe">
+                                </div>
+                                <h4 id="dungeonBossName" style="color: #f39c12;">Chefe</h4>
+                                <div class="combatant-hp">
+                                    <div class="hp-bar-track">
+                                        <div id="dungeonBossHpFill" class="hp-bar-fill enemy-fill" style="width: 100%;"></div>
+                                    </div>
+                                    <small id="dungeonBossHpText">120 / 120 HP</small>
+                                </div>
+                                <div class="combatant-passives enemy-power" id="dungeonBossPower">Poder do Chefe</div>
+                            </div>
+                        </div>
+
+                        <!-- AÇÕES DO CHEFE -->
+                        <div class="combat-controls-panel" style="margin-top: 15px;">
+                            <div id="dungeonTurnActions" class="actions-row">
+                                <button class="btn btn-danger btn-large btn-glow" onclick="dungeonAction('atacar')">
+                                    ⚔️ Desferir Golpe no Chefe
+                                </button>
+                                <button class="btn btn-success" onclick="dungeonQuickPotion()">
+                                    🧪 Usar Poção
+                                </button>
+                            </div>
+                            <div id="dungeonVictoryActions" class="actions-row hidden">
+                                <button class="btn btn-primary btn-large btn-glow" onclick="initDungeonFloor()">
+                                    👑 Desafiar Próximo Andar ➔
+                                </button>
+                            </div>
+                            <div id="dungeonDefeatActions" class="actions-row hidden">
+                                <button class="btn btn-warning btn-large" onclick="initDungeonFloor()">
+                                    🔄 Tentar Novamente este Andar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CATÁLOGO DOS 20 ANDARES -->
+                    <div class="dungeon-floors-list" id="dungeonFloorsList">
+                        <!-- Gerado dinamicamente via JS -->
+                    </div>
+
+                </div>
+            </section>
+
+
+            <!-- ============================================== -->
+            <!-- ABA 3: PERSONAGEM, ACADEMIA & FERREIRO         -->
+            <!-- ============================================== -->
+            <section id="tabContentPerfil" class="tab-pane">
+                <div class="profile-layout-grid">
+
+                    <!-- COLUNA 1: PERFIL & PAPERDOLL -->
+                    <div class="profile-card-column">
+                        <div class="hero-summary-card">
+                            <div class="hero-summary-top">
+                                <div class="hero-portrait-frame">
+                                    <img id="profileHeroImg" src="/static/images/classes/guerreiro.svg" alt="Avatar">
+                                </div>
+                                <div class="hero-summary-data">
+                                    <h3 id="profileHeroName">Nome do Herói</h3>
+                                    <div class="profile-badges-row">
+                                        <span id="profileHeroClass" class="badge-class">Classe</span>
+                                        <span id="profileHeroLvl" class="badge-level">Nível 1</span>
+                                    </div>
+                                    <p id="profilePassiveDesc" class="passive-quote">⚡ Passiva</p>
+                                </div>
+                            </div>
+
+                            <div class="detailed-stats-grid">
+                                <div class="d-stat-box"><span class="d-stat-label">❤️ Vida Máx</span><strong id="profileStatHp">100</strong></div>
+                                <div class="d-stat-box"><span class="d-stat-label">⚔️ Ataque Total</span><strong id="profileStatAtk">14</strong></div>
+                                <div class="d-stat-box"><span class="d-stat-label">🛡️ Defesa Total</span><strong id="profileStatDef">6</strong></div>
+                                <div class="d-stat-box"><span class="d-stat-label">💨 Esquiva</span><strong id="profileStatDodge">5%</strong></div>
+                                <div class="d-stat-box"><span class="d-stat-label">⚡ Crítico</span><strong id="profileStatCrit">10%</strong></div>
+                                <div class="d-stat-box"><span class="d-stat-label">🪙 Moedas</span><strong id="profileStatGold" style="color:#ffa502;">0</strong></div>
+                            </div>
+                        </div>
+
+                        <!-- PAPERDOLL DE 4 SLOTS COM MELHORIA DO FERREIRO -->
+                        <div class="paperdoll-section">
+                            <div class="section-sub-header">
+                                <h4>🛡️ Equipamentos em Uso (Paperdoll)</h4>
+                                <small style="color: #a5b4fc;">Melhore seus itens equipados no Ferreiro!</small>
+                            </div>
+                            <div class="paperdoll-grid">
+                                <div class="paperdoll-slot" id="pdSlotCabeca">
+                                    <div class="pd-slot-header">
+                                        <span>👑 CABEÇA</span>
+                                        <div class="pd-actions-row">
+                                            <button class="btn-slot-upgrade hidden" id="btnUpgradeCabeca" onclick="upgradeEquippedSlot('cabeca')">✨ +1</button>
+                                            <button class="btn-slot-action hidden" id="btnPdUnequipCabeca" onclick="unequipSlot('cabeca')">Desequipar</button>
+                                        </div>
+                                    </div>
+                                    <div class="pd-slot-body" id="pdBodyCabeca"><span class="slot-empty">Nenhum capacete</span></div>
+                                </div>
+
+                                <div class="paperdoll-slot" id="pdSlotPeitoral">
+                                    <div class="pd-slot-header">
+                                        <span>🛡️ PEITORAL</span>
+                                        <div class="pd-actions-row">
+                                            <button class="btn-slot-upgrade hidden" id="btnUpgradePeitoral" onclick="upgradeEquippedSlot('peitoral')">✨ +1</button>
+                                            <button class="btn-slot-action hidden" id="btnPdUnequipPeitoral" onclick="unequipSlot('peitoral')">Desequipar</button>
+                                        </div>
+                                    </div>
+                                    <div class="pd-slot-body" id="pdBodyPeitoral"><span class="slot-empty">Nenhuma armadura</span></div>
+                                </div>
+
+                                <div class="paperdoll-slot" id="pdSlotArma">
+                                    <div class="pd-slot-header">
+                                        <span>🗡️ ARMA</span>
+                                        <div class="pd-actions-row">
+                                            <button class="btn-slot-upgrade hidden" id="btnUpgradeArma" onclick="upgradeEquippedSlot('arma')">✨ +1</button>
+                                            <button class="btn-slot-action hidden" id="btnPdUnequipArma" onclick="unequipSlot('arma')">Desequipar</button>
+                                        </div>
+                                    </div>
+                                    <div class="pd-slot-body" id="pdBodyArma"><span class="slot-empty">Nenhuma arma</span></div>
+                                </div>
+
+                                <div class="paperdoll-slot" id="pdSlotAnel">
+                                    <div class="pd-slot-header">
+                                        <span>💍 ANEL</span>
+                                        <div class="pd-actions-row">
+                                            <button class="btn-slot-upgrade hidden" id="btnUpgradeAnel" onclick="upgradeEquippedSlot('anel')">✨ +1</button>
+                                            <button class="btn-slot-action hidden" id="btnPdUnequipAnel" onclick="unequipSlot('anel')">Desequipar</button>
+                                        </div>
+                                    </div>
+                                    <div class="pd-slot-body" id="pdBodyAnel"><span class="slot-empty">Nenhum anel</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- COLUNA 2: ACADEMIA DE ATRIBUTOS & MOCHILA / FERREIRO -->
+                    <div class="profile-actions-column">
+                        
+                        <!-- ACADEMIA DE ATRIBUTOS (INVESTIMENTO DE MOEDAS) -->
+                        <div class="academy-card">
+                            <div class="section-sub-header">
+                                <div>
+                                    <h4>🏋️ Academia de Atributos</h4>
+                                    <p class="section-desc">Invista moedas de ouro para aumentar permanentemente suas características de combate.</p>
+                                </div>
+                            </div>
+
+                            <div class="academy-attributes-grid">
+                                <!-- FORÇA -->
+                                <div class="academy-attr-row">
+                                    <div class="attr-meta">
+                                        <span class="attr-icon">🥊</span>
+                                        <div>
+                                            <strong>Força</strong>
+                                            <small>+1 Ataque por ponto</small>
+                                        </div>
+                                    </div>
+                                    <div class="attr-value" id="acadValForca">0 pts</div>
+                                    <button class="btn btn-warning btn-sm btn-attr-up" onclick="upgradeAttribute('forca')">
+                                        + <span id="acadCostForca">15</span> 🪙
+                                    </button>
+                                </div>
+
+                                <!-- DESTREZA -->
+                                <div class="academy-attr-row">
+                                    <div class="attr-meta">
+                                        <span class="attr-icon">🎯</span>
+                                        <div>
+                                            <strong>Destreza</strong>
+                                            <small>+0.5% Crítico e Esquiva</small>
+                                        </div>
+                                    </div>
+                                    <div class="attr-value" id="acadValDestreza">0 pts</div>
+                                    <button class="btn btn-warning btn-sm btn-attr-up" onclick="upgradeAttribute('destreza')">
+                                        + <span id="acadCostDestreza">15</span> 🪙
+                                    </button>
+                                </div>
+
+                                <!-- VITALIDADE -->
+                                <div class="academy-attr-row">
+                                    <div class="attr-meta">
+                                        <span class="attr-icon">❤️</span>
+                                        <div>
+                                            <strong>Vitalidade</strong>
+                                            <small>+8 Vida Máxima</small>
+                                        </div>
+                                    </div>
+                                    <div class="attr-value" id="acadValVitalidade">0 pts</div>
+                                    <button class="btn btn-warning btn-sm btn-attr-up" onclick="upgradeAttribute('vitalidade')">
+                                        + <span id="acadCostVitalidade">15</span> 🪙
+                                    </button>
+                                </div>
+
+                                <!-- MENTE -->
+                                <div class="academy-attr-row">
+                                    <div class="attr-meta">
+                                        <span class="attr-icon">🧠</span>
+                                        <div>
+                                            <strong>Mente</strong>
+                                            <small>+1 Defesa por ponto</small>
+                                        </div>
+                                    </div>
+                                    <div class="attr-value" id="acadValMente">0 pts</div>
+                                    <button class="btn btn-warning btn-sm btn-attr-up" onclick="upgradeAttribute('mente')">
+                                        + <span id="acadCostMente">15</span> 🪙
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- MOCHILA E FERREIRO (DESMONTAR POR POEIRA / VENDER POR MOEDAS) -->
+                        <div class="inventory-column">
+                            <div class="section-header">
+                                <div class="title-with-badge">
+                                    <h3>🎒 Mochila & Forja</h3>
+                                    <span class="badge-neutral" id="invCapacityLabel">0 Itens</span>
+                                </div>
+                                <div class="ferreiro-legend">
+                                    <span>🔨 Desmontar ➔ Poeira</span>
+                                    <span>💰 Vender ➔ 50% Moedas</span>
+                                </div>
+                            </div>
+
+                            <div class="inventory-grid" id="profileInventoryGrid">
+                                <!-- Gerado dinamicamente via JS -->
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </section>
+
+
+            <!-- ============================================== -->
+            <!-- ABA 4: ESCONDERIJO DO HERÓI (IDLE / PASSIVO)   -->
+            <!-- ============================================== -->
+            <section id="tabContentEsconderijo" class="tab-pane">
+                <div class="hideout-container">
+                    
+                    <div class="hideout-header-card">
+                        <div>
+                            <h3>🏰 Esconderijo Subterrâneo do Herói</h3>
+                            <p>Suas instalações secretas produzem recursos continuamente enquanto você aventura ou descansa offline!</p>
+                        </div>
+                        <button class="btn btn-success btn-large btn-glow" onclick="collectHideoutResources()">
+                            💰 Coletar Todos os Recursos
+                        </button>
+                    </div>
+
+                    <div class="hideout-buildings-grid">
+                        
+                        <!-- MINA DE MOEDAS -->
+                        <div class="building-card">
+                            <div class="building-header">
+                                <span class="building-icon">⛏️</span>
+                                <div>
+                                    <h4 id="minaTitle">Mina de Ouro (Nível 1)</h4>
+                                    <span class="building-rate" id="minaRate">Produção: 60 moedas / hora</span>
+                                </div>
+                            </div>
+                            <div class="building-storage-box">
+                                <small>Acumulado para resgate:</small>
+                                <strong id="minaStored">0 🪙</strong>
+                            </div>
+                            <div class="building-upgrade-footer">
+                                <button class="btn btn-primary btn-sm" id="btnUpgradeMina" onclick="upgradeBuilding('mina')">
+                                    🔼 Evoluir Mina (Nível <span id="minaNextLvl">2</span>)
+                                </button>
+                                <small id="minaCostText">Custo: 120 🪙 | 15 🔮</small>
+                            </div>
+                        </div>
+
+                        <!-- LABORATÓRIO DE POÇÕES -->
+                        <div class="building-card">
+                            <div class="building-header">
+                                <span class="building-icon">⚗️</span>
+                                <div>
+                                    <h4 id="labTitle">Laboratório Alquímico (Nível 1)</h4>
+                                    <span class="building-rate" id="labRate">Produção: 1 poção a cada 60 min</span>
+                                </div>
+                            </div>
+                            <div class="building-storage-box">
+                                <small>Acumulado para resgate:</small>
+                                <strong id="labStored">0 🧪</strong>
+                            </div>
+                            <div class="building-upgrade-footer">
+                                <button class="btn btn-primary btn-sm" id="btnUpgradeLab" onclick="upgradeBuilding('laboratorio')">
+                                    🔼 Evoluir Laboratório (Nível <span id="labNextLvl">2</span>)
+                                </button>
+                                <small id="labCostText">Custo: 160 🪙 | 20 🔮</small>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </section>
+
+
+            <!-- ============================================== -->
+            <!-- ABA 5: ROLETA DA SORTE DIÁRIA (CANVAS ANIMADO) -->
+            <!-- ============================================== -->
+            <section id="tabContentRoleta" class="tab-pane">
+                <div class="wheel-container">
+                    
+                    <div class="wheel-header">
+                        <h3>🎰 Roleta da Fortuna dos Titãs</h3>
+                        <p>Gire a roleta mágica para ganhar ouro, poções, pós arcanos e <strong>equipamentos Lendários</strong>!</p>
+                        <div class="wheel-spins-badge" id="wheelSpinsBadge">
+                            ⭐ 1 Giro Grátis Disponível!
+                        </div>
+                    </div>
+
+                    <div class="wheel-canvas-wrapper">
+                        <div class="wheel-ticker-arrow">▼</div>
+                        <canvas id="wheelCanvas" width="440" height="440"></canvas>
+                    </div>
+
+                    <div class="wheel-actions">
+                        <button id="btnSpinWheel" class="btn btn-warning btn-large btn-glow" onclick="spinWheelOfFortune()">
+                            🎲 GIRAR A ROLETA!
+                        </button>
+                        <small id="spinCostNotice" style="color: var(--text-muted); margin-top: 4px;">Giros extras custam 50 🪙 moedas de ouro.</small>
+                    </div>
+
+                </div>
+            </section>
+
+
+            <!-- ============================================== -->
+            <!-- ABA 6: MAPA DO MUNDO (SVG INTERATIVO)          -->
+            <!-- ============================================== -->
+            <section id="tabContentMapa" class="tab-pane">
+                <div class="world-map-container">
+                    <div class="world-map-header">
+                        <div>
+                            <h3>🗺️ Cartografia do Reino de Aethelgard</h3>
+                            <p>Viaje entre regiões para desbloquear monstros exclusivos e desafios mais lucrativos!</p>
+                        </div>
+                        <div class="current-location-pill">
+                            <span>Sua Localização:</span>
+                            <strong id="mapCurrentLocationLabel">🌲 Floresta dos Goblins</strong>
+                        </div>
+                    </div>
+
+                    <div class="svg-map-wrapper">
+                        <svg viewBox="0 0 1000 600" class="world-map-svg" id="worldMapSvg">
+                            <defs>
+                                <radialGradient id="oceanGrad" cx="50%" cy="50%" r="50%">
+                                    <stop offset="0%" stop-color="#0a1324"/>
+                                    <stop offset="100%" stop-color="#050811"/>
+                                </radialGradient>
+                                <linearGradient id="landGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#141a29"/>
+                                    <stop offset="100%" stop-color="#0f1422"/>
+                                </linearGradient>
+                                <filter id="glowFilter" x="-20%" y="-20%" width="140%" height="140%">
+                                    <feGaussianBlur stdDeviation="6" result="blur" />
+                                    <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                                </filter>
+                            </defs>
+
+                            <rect width="1000" height="600" fill="url(#oceanGrad)" />
+                            <path d="M 100 480 Q 80 320 220 280 T 420 180 T 680 120 T 900 200 T 880 440 T 640 520 T 360 540 Z" fill="url(#landGrad)" stroke="#232a3d" stroke-width="3" />
+                            
+                            <path d="M 180 420 Q 280 360 420 220" class="map-road" />
+                            <path d="M 420 220 Q 550 320 680 460" class="map-road" />
+                            <path d="M 680 460 Q 800 360 860 180" class="map-road" />
+
+                            <g class="map-node-group" onclick="selectMapRegion('floresta')" id="node_floresta">
+                                <circle cx="180" cy="420" r="38" class="map-node-base node-active" />
+                                <circle cx="180" cy="420" r="46" class="map-node-ring" />
+                                <text x="180" y="428" class="map-node-icon">🌲</text>
+                                <text x="180" y="480" class="map-node-label">Floresta dos Goblins</text>
+                                <text x="180" y="498" class="map-node-level">Nível 1+</text>
+                            </g>
+
+                            <g class="map-node-group" onclick="selectMapRegion('montanha')" id="node_montanha">
+                                <circle cx="420" cy="220" r="38" class="map-node-base" />
+                                <circle cx="420" cy="220" r="46" class="map-node-ring" />
+                                <text x="420" y="228" class="map-node-icon">🏔️</text>
+                                <text x="420" y="280" class="map-node-label">Montanha dos Vikings</text>
+                                <text x="420" y="298" class="map-node-level">Nível 3+</text>
+                            </g>
+
+                            <g class="map-node-group" onclick="selectMapRegion('castelo')" id="node_castelo">
+                                <circle cx="680" cy="460" r="38" class="map-node-base" />
+                                <circle cx="680" cy="460" r="46" class="map-node-ring" />
+                                <text x="680" y="468" class="map-node-icon">🏰</text>
+                                <text x="680" y="520" class="map-node-label">Castelo do Lich</text>
+                                <text x="680" y="538" class="map-node-level">Nível 5+</text>
+                            </g>
+
+                            <g class="map-node-group" onclick="selectMapRegion('vulcao')" id="node_vulcao">
+                                <circle cx="860" cy="180" r="38" class="map-node-base" />
+                                <circle cx="860" cy="180" r="46" class="map-node-ring" />
+                                <text x="860" y="188" class="map-node-icon">🌋</text>
+                                <text x="860" y="240" class="map-node-label">Vulcão do Dragão</text>
+                                <text x="860" y="258" class="map-node-level">Nível 8+</text>
+                            </g>
+                        </svg>
+                    </div>
+
+                    <div class="selected-region-card" id="selectedRegionInfo">
+                        <div class="region-info-header">
+                            <span class="region-big-icon" id="infoRegionIcon">🌲</span>
+                            <div>
+                                <h4 id="infoRegionName">Floresta dos Goblins</h4>
+                                <span class="badge-level" id="infoRegionReqLvl">Requer Nível 1</span>
+                            </div>
+                        </div>
+                        <p id="infoRegionDesc">Descrição da região.</p>
+                        <div class="monsters-pills-row" id="infoRegionMonsters"></div>
+                        <button id="btnTravelToRegion" class="btn btn-primary btn-large btn-glow" onclick="travelToSelectedRegion()">
+                            🚶 Viajar para esta Região
+                        </button>
+                    </div>
+
+                </div>
+            </section>
+
+
+            <!-- ============================================== -->
+            <!-- ABA 7: TREINAMENTO (VISUAL COM DUMMY E TIMERS) -->
+            <!-- ============================================== -->
+            <section id="tabContentTreino" class="tab-pane">
+                <div class="training-container">
+                    
+                    <div id="activeTrainingCard" class="active-training-card hidden">
+                        <div class="training-in-progress-header">
+                            <div class="training-status-pulse"></div>
+                            <div>
+                                <small>TREINO EM ANDAMENTO</small>
+                                <h3 id="trainActiveName">Combate contra o Dummy</h3>
+                            </div>
+                        </div>
+
+                        <!-- ANIMAÇÃO VISUAL CSS -->
+                        <div class="training-arena-animation">
+                            <div class="training-hero-sprite anim-training-hero">
+                                <img id="trainHeroImg" src="/static/images/classes/guerreiro.svg" alt="Herói">
+                            </div>
+                            <div class="training-sparks anim-sparks">💥</div>
+                            <div class="training-dummy-sprite anim-training-dummy">
+                                <img src="/static/images/items/dummy.svg" alt="Dummy">
+                            </div>
+                        </div>
+
+                        <div class="timer-display">
+                            <span class="timer-digits" id="trainCountdown">00:00</span>
+                            <span class="timer-unit">tempo restante</span>
+                        </div>
+
+                        <div class="training-progress-bar">
+                            <div id="trainProgressFill" class="train-fill" style="width: 0%;"></div>
+                        </div>
+
+                        <div class="training-rewards-preview">
+                            <span class="reward-pill" id="trainRewXp">✨ +0 XP</span>
+                            <span class="reward-pill" id="trainRewGold">🪙 +0 Moedas</span>
+                            <span class="reward-pill stats-pill" id="trainRewStats">💪 +0 Atributos</span>
+                        </div>
+
+                        <div class="training-active-actions">
+                            <button id="btnCollectTrain" class="btn btn-success btn-large btn-glow hidden" onclick="collectTraining()">
+                                🎁 Coletar Recompensas
+                            </button>
+                            <button id="btnCancelTrain" class="btn btn-outline-danger" onclick="cancelTraining()">
+                                ✖ Cancelar Treino
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="training-intro">
+                        <h3>Dojo Marcial & Posto de Treino</h3>
+                        <p>Deixe seu campeão aperfeiçoando artes marciais. Ganhe XP, moedas e <strong>bônus permanentes de Ataque, Defesa e HP Máximo</strong>!</p>
+                    </div>
+
+                    <div class="training-grid" id="trainingOptionsGrid"></div>
+                </div>
+            </section>
+
+
+            <!-- ============================================== -->
+            <!-- ABA 8: LOJA DO FERREIRO                        -->
+            <!-- ============================================== -->
+            <section id="tabContentLoja" class="tab-pane">
+                <div class="shop-inventory-container">
+                    <div class="shop-section">
+                        <div class="section-header">
+                            <div class="title-with-badge">
+                                <h3>🏪 Mercado do Ferreiro Arcano</h3>
+                                <span class="badge-accent">Raridades até Lendário</span>
+                            </div>
+                            <div class="shop-header-actions">
+                                <button id="btnRerollShop" class="btn btn-warning" onclick="rerollShop()">
+                                    🔄 Atualizar Loja (<span id="rerollCostLabel">Grátis</span>)
+                                </button>
+                                <button class="btn btn-success" onclick="buyPotion()">
+                                    🧪 Comprar Poção (20 🪙)
+                                </button>
+                            </div>
+                        </div>
+
+                        <p class="section-desc">Passe o cursor sobre os itens para ver a comparação visual de status.</p>
+                        <div class="shop-items-grid" id="shopItemsGrid"></div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- TOOLTIP FLUTUANTE DE COMPARAÇÃO DE ITENS (HOVER) -->
+    <div id="itemComparisonTooltip" class="item-tooltip-box hidden">
+        <div class="tooltip-header">
+            <span id="ttRarityBadge" class="rarity-badge">Comum</span>
+            <span id="ttSlotType" class="slot-type">Arma</span>
+        </div>
+        <h4 id="ttItemName">Nome do Item</h4>
+        <p id="ttItemDesc" class="tooltip-desc">Descrição do item.</p>
+
+        <div class="tooltip-comparison-table">
+            <div class="tt-col">
+                <span class="tt-col-title">Equipado</span>
+                <div class="tt-stat-row"><span>Ataque:</span> <strong id="ttEquipAtk">0</strong></div>
+                <div class="tt-stat-row"><span>Defesa:</span> <strong id="ttEquipDef">0</strong></div>
+                <div class="tt-stat-row"><span>HP Max:</span> <strong id="ttEquipHp">0</strong></div>
+                <div class="tt-stat-row"><span>Crítico:</span> <strong id="ttEquipCrit">0%</strong></div>
+                <div class="tt-stat-row"><span>Esquiva:</span> <strong id="ttEquipDodge">0%</strong></div>
+            </div>
+
+            <div class="tt-arrow">➔</div>
+
+            <div class="tt-col">
+                <span class="tt-col-title">Com Novo Item</span>
+                <div class="tt-stat-row"><span>Ataque:</span> <strong id="ttNewAtk">0</strong> <span id="ttDiffAtk" class="diff-badge">+0</span></div>
+                <div class="tt-stat-row"><span>Defesa:</span> <strong id="ttNewDef">0</strong> <span id="ttDiffDef" class="diff-badge">+0</span></div>
+                <div class="tt-stat-row"><span>HP Max:</span> <strong id="ttNewHp">0</strong> <span id="ttDiffHp" class="diff-badge">+0</span></div>
+                <div class="tt-stat-row"><span>Crítico:</span> <strong id="ttNewCrit">0%</strong> <span id="ttDiffCrit" class="diff-badge">+0</span></div>
+                <div class="tt-stat-row"><span>Esquiva:</span> <strong id="ttNewDodge">0%</strong> <span id="ttDiffDodge" class="diff-badge">+0</span></div>
+            </div>
+        </div>
+        
+        <div class="tooltip-footer">
+            <span id="ttPrice">Preço: 50 🪙</span>
+        </div>
+    </div>
+
+    <script src="/static/js/game.js"></script>
+</body>
+</html>

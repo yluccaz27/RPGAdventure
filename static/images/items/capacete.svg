@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <!-- Helmet Dome -->
+  <path d="M25 55 C25 25 40 18 50 18 C60 18 75 25 75 55 L75 68 L65 72 L50 68 L35 72 L25 68 Z" fill="#7f8c8d" stroke="#34495e" stroke-width="3"/>
+  <!-- Crest Feather / Spike -->
+  <path d="M50 12 L54 22 L46 22 Z" fill="#e74c3c" stroke="#c0392b" stroke-width="1.5"/>
+  <!-- Brow Band -->
+  <rect x="25" y="46" width="50" height="8" rx="2" fill="#f1c40f" stroke="#d35400" stroke-width="1.5"/>
+  <!-- Eye Opening -->
+  <rect x="34" y="56" width="12" height="6" rx="2" fill="#1e272e"/>
+  <rect x="54" y="56" width="12" height="6" rx="2" fill="#1e272e"/>
+  <rect x="47" y="54" width="6" height="16" fill="#95a5a6" stroke="#34495e"/>
+</svg>

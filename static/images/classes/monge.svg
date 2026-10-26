@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <circle cx="50" cy="50" r="46" fill="#1e180d" stroke="#f39c12" stroke-width="3"/>
+  <!-- Halo / Chi Aura -->
+  <circle cx="50" cy="50" r="36" fill="none" stroke="#f1c40f" stroke-width="2" stroke-dasharray="6 4" opacity="0.8"/>
+  <!-- Bald Monastic Head -->
+  <circle cx="50" cy="42" r="18" fill="#f5cd79" stroke="#e67e22" stroke-width="1.5"/>
+  <!-- Robe -->
+  <path d="M30 68 L42 52 L58 52 L70 68 L64 82 L36 82 Z" fill="#d35400" stroke="#e67e22" stroke-width="2"/>
+  <!-- Prayer Beads -->
+  <circle cx="44" cy="58" r="3" fill="#8e44ad"/>
+  <circle cx="50" cy="62" r="3.5" fill="#9b59b6"/>
+  <circle cx="56" cy="58" r="3" fill="#8e44ad"/>
+  <!-- Serene Eyes -->
+  <path d="M42 42 Q46 45 50 42" stroke="#2c3e50" stroke-width="1.5" fill="none"/>
+  <path d="M50 42 Q54 45 58 42" stroke="#2c3e50" stroke-width="1.5" fill="none"/>
+</svg>

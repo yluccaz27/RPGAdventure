@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <circle cx="50" cy="50" r="46" fill="#260f08" stroke="#ff4757" stroke-width="3"/>
+  <!-- Rock Head -->
+  <polygon points="34,26 66,26 78,54 62,80 38,80 22,54" fill="#3d3d3d" stroke="#eb4d4b" stroke-width="3"/>
+  <!-- Magma Cracks -->
+  <line x1="38" y1="36" x2="62" y2="44" stroke="#ff793f" stroke-width="3"/>
+  <line x1="62" y1="44" x2="48" y2="64" stroke="#ff793f" stroke-width="2.5"/>
+  <line x1="48" y1="64" x2="58" y2="76" stroke="#fffa65" stroke-width="2"/>
+  <!-- Glowing Eyes -->
+  <polygon points="36,46 44,48 40,52" fill="#fffa65"/>
+  <polygon points="64,46 56,48 60,52" fill="#fffa65"/>
+</svg>

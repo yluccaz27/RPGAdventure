@@ -1,0 +1,3983 @@
+/* ========================================================
+   RPG LEGENDS - DARK FANTASY & CYBERPUNK UI THEME
+   Palette: Deep Void (#0b0c10), Steel Blue (#1f2833), 
+            Neon Cyan (#66fcf1), Teal (#45a29e),
+            Celestial Gold (#c5a059 / #ffd700), Crimson (#ff4757),
+            Arcane Purple (#a855f7), Mystic Blue (#38bdf8)
+   Typography: 'Cinzel' (Headers/Epic), 'Exo 2' (Stats/HUD), 'Inter' (Body)
+   ======================================================== */
+
+:root {
+    /* Superfícies & Fundos Dark Fantasy */
+    --bg-void: #07080b;
+    --bg-dark: #0b0c10;
+    --bg-card: rgba(18, 21, 31, 0.88);
+    --bg-card-hover: rgba(26, 32, 48, 0.95);
+    --bg-surface: #0e111a;
+    --bg-glass: rgba(14, 17, 26, 0.82);
+    
+    /* Bordas & Brilhos */
+    --border-color: #1f2833;
+    --border-glow: #2d3848;
+    --border-neon: rgba(102, 252, 241, 0.25);
+    
+    /* Cores de Acento */
+    --primary: #4f46e5;
+    --primary-light: #6366f1;
+    --neon-cyan: #66fcf1;
+    --neon-teal: #45a29e;
+    
+    --gold: #c5a059;
+    --gold-bright: #ffd700;
+    --gold-glow: rgba(197, 160, 89, 0.45);
+    
+    --danger: #ff4757;
+    --danger-bright: #ff6b81;
+    --danger-glow: rgba(255, 71, 87, 0.5);
+    
+    --success: #2ed573;
+    --success-bright: #26de81;
+    --success-glow: rgba(46, 213, 115, 0.4);
+    
+    --arcane-purple: #a855f7;
+    --arcane-glow: rgba(168, 85, 247, 0.45);
+    
+    --mystic-blue: #38bdf8;
+    --mystic-glow: rgba(56, 189, 248, 0.4);
+    
+    --text-main: #f1f2f6;
+    --text-muted: #8c95a8;
+    --text-sub: #a4b0be;
+    
+    /* Raridades de Itens */
+    --rarity-comum: #64748b;
+    --rarity-raro: #38bdf8;
+    --rarity-epico: #a855f7;
+    --rarity-lendario: #f59e0b;
+    
+    /* Tipografia */
+    --font-title: 'Cinzel', serif, Georgia;
+    --font-hud: 'Exo 2', sans-serif, system-ui;
+    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* ========================================================
+   RESET & CONFIGURAÇÃO GLOBAL
+   ======================================================== */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background-color: var(--bg-dark);
+    background-image: 
+        radial-gradient(circle at 50% 0%, rgba(31, 40, 51, 0.5) 0%, transparent 60%),
+        radial-gradient(circle at 100% 100%, rgba(102, 252, 241, 0.04) 0%, transparent 40%),
+        radial-gradient(circle at 0% 100%, rgba(255, 71, 87, 0.04) 0%, transparent 40%);
+    background-attachment: fixed;
+    color: var(--text-main);
+    font-family: var(--font-body);
+    font-size: 14px;
+    line-height: 1.5;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+}
+
+/* SCROLLBAR PERSONALIZADO DARK CYBERPUNK */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+::-webkit-scrollbar-track {
+    background: #07080b;
+}
+::-webkit-scrollbar-thumb {
+    background: #1f2833;
+    border-radius: 4px;
+    border: 1px solid rgba(102, 252, 241, 0.15);
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--neon-teal);
+}
+
+.app-layout {
+    width: 100%;
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 12px 16px 36px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+/* ========================================================
+   1. HUD GLOBAL (CABEÇALHO COM GLASSMORPHISM)
+   ======================================================== */
+.hud-global {
+    position: sticky;
+    top: 8px;
+    z-index: 100;
+    background: rgba(11, 14, 22, 0.86);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border-neon);
+    border-radius: 14px;
+    padding: 10px 16px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 18px rgba(102, 252, 241, 0.08);
+    transition: all 0.3s ease;
+}
+
+.hud-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.avatar-box {
+    position: relative;
+    width: 54px;
+    height: 54px;
+    background: linear-gradient(135deg, #07080b, #151a24);
+    border: 2px solid var(--gold);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    box-shadow: 0 0 12px var(--gold-glow);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.avatar-box:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 18px var(--gold-glow);
+}
+
+.avatar-box img {
+    width: 88%;
+    height: 88%;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 6px rgba(0,0,0,0.8));
+}
+
+.avatar-badge {
+    position: absolute;
+    bottom: -1px;
+    right: -1px;
+    background: rgba(7, 8, 11, 0.92);
+    border: 1px solid var(--border-neon);
+    border-radius: 6px;
+    font-size: 11px;
+    padding: 1px 3px;
+    box-shadow: 0 0 8px rgba(0,0,0,0.7);
+}
+
+.hero-identity {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.hero-name-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.hero-name-row h2 {
+    font-family: var(--font-title);
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: 0.5px;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+}
+
+.badge-class {
+    font-family: var(--font-hud);
+    background: rgba(79, 70, 229, 0.2);
+    color: #a5b4fc;
+    border: 1px solid rgba(79, 70, 229, 0.45);
+    padding: 1px 6px;
+    border-radius: 6px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.badge-level {
+    font-family: var(--font-hud);
+    background: rgba(197, 160, 89, 0.2);
+    color: var(--gold-bright);
+    border: 1px solid var(--gold);
+    padding: 1px 6px;
+    border-radius: 6px;
+    font-size: 0.72rem;
+    font-weight: 800;
+    box-shadow: 0 0 8px rgba(197, 160, 89, 0.2);
+}
+
+.badge-region {
+    font-family: var(--font-hud);
+    background: rgba(46, 213, 115, 0.15);
+    color: var(--success-bright);
+    border: 1px solid rgba(46, 213, 115, 0.4);
+    padding: 1px 6px;
+    border-radius: 6px;
+    font-size: 0.7rem;
+    font-weight: 700;
+}
+
+/* BARRAS DE STATUS COM BRILHO NEON E TRANSIÇÃO SUAVE */
+.bar-container {
+    width: 175px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.bar-labels {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-hud);
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    font-weight: 700;
+}
+
+.bar-track {
+    width: 100%;
+    height: 9px;
+    background: #07080b;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+}
+
+.bar-fill {
+    height: 100%;
+    position: relative;
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.bar-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.3) 50%,
+        rgba(255, 255, 255, 0) 100%
+    );
+    animation: barShimmer 2.5s infinite linear;
+}
+
+@keyframes barShimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+.hp-fill {
+    background: linear-gradient(90deg, #ff4757, #ff6b81);
+    box-shadow: 0 0 12px var(--danger-glow);
+}
+
+.xp-fill {
+    background: linear-gradient(90deg, #c5a059, #ffd700);
+    box-shadow: 0 0 12px var(--gold-glow);
+}
+
+.hud-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.hud-buff {
+    font-family: var(--font-hud);
+    font-size: 0.72rem;
+    background: rgba(46, 213, 115, 0.15);
+    color: var(--success-bright);
+    border: 1px solid rgba(46, 213, 115, 0.45);
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-weight: 700;
+    box-shadow: 0 0 10px rgba(46, 213, 115, 0.25);
+    animation: pulseGlow 2s infinite ease-in-out;
+}
+
+@keyframes pulseGlow {
+    0%, 100% { opacity: 0.85; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.02); }
+}
+
+.hud-right {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+/* PÍLULAS DE STATUS ESTILIZADAS COM NEON E ÍCONES */
+.stat-pill {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(14, 17, 26, 0.85);
+    border: 1px solid var(--border-color);
+    padding: 4px 8px;
+    border-radius: 8px;
+    cursor: default;
+    transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+
+.stat-pill:hover {
+    border-color: var(--border-neon);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.stat-icon {
+    font-size: 1.05rem;
+}
+
+.stat-data {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.1;
+}
+
+.stat-title {
+    font-size: 0.62rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    font-family: var(--font-hud);
+    letter-spacing: 0.5px;
+}
+
+.stat-data strong {
+    font-family: var(--font-hud);
+    font-size: 0.84rem;
+    color: #ffffff;
+    font-weight: 800;
+}
+
+.gold-pill {
+    border-color: rgba(197, 160, 89, 0.35);
+    background: linear-gradient(135deg, rgba(14, 17, 26, 0.9), rgba(197, 160, 89, 0.08));
+}
+.gold-pill strong { color: var(--gold-bright); text-shadow: 0 0 6px var(--gold-glow); }
+.gold-pill:hover { border-color: var(--gold); box-shadow: 0 0 10px var(--gold-glow); }
+
+.dust-pill {
+    border-color: rgba(168, 85, 247, 0.35);
+    background: linear-gradient(135deg, rgba(14, 17, 26, 0.9), rgba(168, 85, 247, 0.08));
+}
+.dust-pill strong { color: #d8b4fe; text-shadow: 0 0 6px var(--arcane-glow); }
+.dust-pill:hover { border-color: var(--arcane-purple); box-shadow: 0 0 10px var(--arcane-glow); }
+
+.potion-pill {
+    cursor: pointer;
+    border-color: rgba(46, 213, 115, 0.35);
+}
+.potion-pill strong { color: var(--success-bright); }
+.potion-pill:hover { border-color: var(--success); box-shadow: 0 0 10px var(--success-glow); }
+
+.user-pill {
+    background: linear-gradient(135deg, rgba(30, 27, 75, 0.85), rgba(49, 46, 129, 0.85)) !important;
+    border-color: rgba(99, 102, 241, 0.5) !important;
+}
+.user-pill strong { color: #c7d2fe; }
+
+/* ========================================================
+   2. NAVEGAÇÃO POR ABAS (SPA STYLE CYBERPUNK HUD)
+   ======================================================== */
+.tabs-nav {
+    display: flex;
+    gap: 6px;
+    background: rgba(14, 17, 26, 0.75);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 6px;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+.tabs-nav::-webkit-scrollbar { display: none; }
+
+.tab-btn {
+    flex: 1;
+    min-width: 105px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 10px;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    cursor: pointer;
+    color: var(--text-muted);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    user-select: none;
+}
+
+.tab-btn:hover {
+    color: #ffffff;
+    background: rgba(31, 40, 51, 0.5);
+    border-color: rgba(102, 252, 241, 0.15);
+    transform: translateY(-1px);
+}
+
+.tab-btn.active {
+    color: #ffffff;
+    background: linear-gradient(180deg, rgba(31, 40, 51, 0.85), rgba(14, 17, 26, 0.95));
+    border-color: var(--border-neon);
+    border-bottom: 2px solid var(--neon-cyan);
+    box-shadow: 0 4px 16px rgba(102, 252, 241, 0.15), inset 0 1px 0 rgba(102, 252, 241, 0.2);
+}
+
+.tab-icon {
+    font-size: 1.15rem;
+    margin-bottom: 2px;
+    transition: transform 0.2s ease;
+}
+.tab-btn:hover .tab-icon,
+.tab-btn.active .tab-icon {
+    transform: scale(1.15);
+}
+
+.tab-text {
+    font-family: var(--font-hud);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+}
+
+.tab-sub {
+    font-family: var(--font-hud);
+    font-size: 0.62rem;
+    color: var(--text-muted);
+    margin-top: 1px;
+}
+.tab-btn.active .tab-sub {
+    color: var(--neon-cyan);
+}
+
+/* ÁREAS DE CONTEÚDO DAS ABAS */
+.tabs-content {
+    width: 100%;
+}
+
+.tab-pane {
+    display: none;
+}
+
+.tab-pane.active {
+    display: block;
+    animation: tabFadeIn 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes tabFadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ========================================================
+   3. FEEDBACK VISUAL DE COMBATE (FLOATERS & SCREEN SHAKE)
+   ======================================================== */
+.floater-container {
+    position: absolute;
+    top: -24px;
+    left: 50%;
+    transform: translateX(-50%);
+    pointer-events: none;
+    z-index: 60;
+    width: 220px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.damage-floater {
+    position: absolute;
+    font-family: var(--font-hud);
+    font-weight: 900;
+    font-size: 1.55rem;
+    color: var(--danger-bright);
+    text-shadow: 0 0 10px rgba(0,0,0,0.9), 0 2px 4px #000, 0 0 14px var(--danger-glow);
+    animation: floatDamage 1.25s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards;
+    white-space: nowrap;
+}
+
+.damage-floater.crit {
+    font-size: 2.2rem;
+    color: #fffa65;
+    text-shadow: 0 0 14px #f39c12, 0 0 26px var(--danger), 0 3px 6px #000;
+}
+
+.damage-floater.dodge {
+    font-size: 1.45rem;
+    color: var(--neon-cyan);
+    font-style: italic;
+    text-shadow: 0 0 12px var(--mystic-glow), 0 2px 4px #000;
+}
+
+.damage-floater.heal {
+    font-size: 1.45rem;
+    color: var(--success-bright);
+    text-shadow: 0 0 12px var(--success-glow), 0 2px 4px #000;
+}
+
+.damage-floater.counter {
+    font-size: 1.4rem;
+    color: #ff9f43;
+    text-shadow: 0 0 12px rgba(255, 159, 67, 0.6), 0 2px 4px #000;
+}
+
+@keyframes floatDamage {
+    0% {
+        opacity: 0;
+        transform: translateY(24px) scale(0.6);
+    }
+    20% {
+        opacity: 1;
+        transform: translateY(0) scale(1.22);
+    }
+    45% {
+        transform: translateY(-12px) scale(1);
+    }
+    80% {
+        opacity: 0.9;
+        transform: translateY(-44px) scale(0.96);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-72px) scale(0.75);
+    }
+}
+
+/* SCREEN SHAKE CSS NA ARENA OU CARD */
+.screen-shake {
+    animation: screenShakeHeavy 0.4s cubic-bezier(.36,.07,.19,.97) both !important;
+}
+
+@keyframes screenShakeHeavy {
+    10%, 90% { transform: translate3d(-4px, 2px, 0) rotate(-1deg); }
+    20%, 80% { transform: translate3d(5px, -3px, 0) rotate(1.2deg); }
+    30%, 50%, 70% { transform: translate3d(-7px, 4px, 0) rotate(-1.5deg); }
+    40%, 60% { transform: translate3d(7px, -4px, 0) rotate(1.5deg); }
+}
+
+/* ========================================================
+   4. ABA 1: AVENTURA (ARENA DE BATALHA COM PROFUNDIDADE)
+   ======================================================== */
+.adventure-container {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.wave-header-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+}
+
+.wave-indicator h3 {
+    font-family: var(--font-title);
+    font-size: 1.35rem;
+    color: var(--danger-bright);
+    letter-spacing: 0.5px;
+    text-shadow: 0 0 10px rgba(255, 71, 87, 0.3);
+}
+.wave-label {
+    font-family: var(--font-hud);
+    font-size: 0.72rem;
+    color: var(--text-muted);
+}
+
+.loot-chest-preview {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: rgba(14, 17, 26, 0.9);
+    padding: 6px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+}
+
+.loot-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.loot-item .loot-icon {
+    font-size: 1.3rem;
+}
+.loot-item small {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    display: block;
+    font-family: var(--font-hud);
+    text-transform: uppercase;
+}
+.loot-item strong {
+    font-family: var(--font-hud);
+    font-size: 0.95rem;
+    color: var(--gold-bright);
+}
+
+.adv-idle-box {
+    background: var(--bg-card);
+    border: 1px dashed var(--border-glow);
+    border-radius: 14px;
+    padding: 38px 20px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+}
+
+.idle-graphic {
+    font-size: 3.8rem;
+    animation: floatAnim 3s ease-in-out infinite;
+}
+@keyframes floatAnim {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+
+.adv-battle-box {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    box-shadow: 0 8px 26px rgba(0, 0, 0, 0.6);
+}
+
+/* ARENA VISUAL COM ILUMINAÇÃO RADIAL DARK FANTASY */
+.arena-visual {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    background: radial-gradient(circle at 50% 50%, rgba(31, 40, 51, 0.65) 0%, rgba(11, 12, 16, 0.96) 80%), #07080b;
+    border: 1px solid var(--border-neon);
+    border-radius: 14px;
+    padding: 26px 18px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.8), 0 8px 24px rgba(0, 0, 0, 0.6);
+}
+
+.combatant-card {
+    width: 38%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 8px;
+    position: relative;
+    transition: transform 0.25s ease;
+}
+
+.combatant-avatar-wrap {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, rgba(0, 0, 0, 0.6) 80%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    border: 2px solid var(--border-color);
+    box-shadow: 0 0 16px rgba(0, 0, 0, 0.8);
+    transition: transform 0.2s, border-color 0.2s;
+}
+
+.combatant-avatar-wrap img {
+    width: 76px;
+    height: 76px;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.7));
+}
+
+.combatant-hp {
+    width: 100%;
+    max-width: 180px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.hp-bar-track {
+    width: 100%;
+    height: 12px;
+    background: #07080b;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.08);
+    position: relative;
+}
+
+.hp-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #2ed573, #26de81);
+    box-shadow: 0 0 10px var(--success-glow);
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.enemy-fill {
+    background: linear-gradient(90deg, #ff4757, #ff6b81);
+    box-shadow: 0 0 10px var(--danger-glow);
+}
+
+.combatant-passives {
+    font-size: 0.72rem;
+    color: #a5b4fc;
+    font-style: italic;
+    background: rgba(0,0,0,0.5);
+    padding: 3px 8px;
+    border-radius: 6px;
+    max-width: 220px;
+    border: 1px solid rgba(255,255,255,0.05);
+}
+.enemy-power {
+    color: #ff9f43;
+}
+
+.versus-divider {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.vs-text {
+    font-family: var(--font-hud);
+    font-size: 1.9rem;
+    font-weight: 900;
+    color: var(--danger);
+    text-shadow: 0 0 16px var(--danger-glow);
+    z-index: 2;
+}
+
+.combat-controls {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* ========================================================
+   5. ABA 2: MASMORRA (TORRE DOS 20 CHEFES)
+   ======================================================== */
+.dungeon-container {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.dungeon-banner {
+    background: linear-gradient(135deg, rgba(30, 27, 75, 0.7), rgba(11, 12, 16, 0.95)), var(--bg-card);
+    border: 1px solid var(--border-neon);
+    border-radius: 14px;
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+}
+
+.dungeon-banner h3 {
+    font-family: var(--font-title);
+    font-size: 1.35rem;
+    color: #e0e7ff;
+}
+
+.dungeon-floors-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+    max-height: 480px;
+    overflow-y: auto;
+    padding: 4px;
+}
+
+.floor-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    text-align: center;
+    position: relative;
+    transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+
+.floor-card.unlocked {
+    border-color: rgba(99, 102, 241, 0.4);
+}
+.floor-card.unlocked:hover {
+    transform: translateY(-3px);
+    border-color: var(--primary-light);
+    box-shadow: 0 6px 18px rgba(79, 70, 229, 0.25);
+}
+
+.floor-card.current {
+    border-color: var(--neon-cyan);
+    box-shadow: 0 0 16px rgba(102, 252, 241, 0.25);
+    background: linear-gradient(180deg, rgba(14, 17, 26, 0.95), rgba(102, 252, 241, 0.05));
+}
+
+.floor-card.completed {
+    border-color: rgba(46, 213, 115, 0.4);
+    opacity: 0.85;
+}
+
+.floor-card.locked {
+    opacity: 0.5;
+    filter: grayscale(0.8);
+    cursor: not-allowed;
+}
+
+.floor-boss-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--border-color);
+}
+.floor-boss-avatar img {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+}
+
+/* ========================================================
+   6. ABA 3: PERFIL, ACADEMIA DE ATRIBUTOS E FERREIRO
+   ======================================================== */
+.profile-layout-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.3fr;
+    gap: 16px;
+}
+
+.profile-card-column, .profile-actions-column {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.hero-summary-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+}
+
+.hero-summary-top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.hero-portrait-frame {
+    width: 72px;
+    height: 72px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #07080b, #151a24);
+    border: 2px solid var(--gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+    box-shadow: 0 0 14px var(--gold-glow);
+}
+.hero-portrait-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.hero-summary-data h3 {
+    font-family: var(--font-title);
+    font-size: 1.2rem;
+    color: #ffffff;
+}
+
+.detailed-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 10px 12px;
+}
+
+.d-stat-box {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+.d-stat-label {
+    font-family: var(--font-hud);
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+}
+.d-stat-box strong {
+    font-family: var(--font-hud);
+    font-size: 0.92rem;
+    color: #ffffff;
+    font-weight: 800;
+}
+
+/* PAPERDOLL & SLOTS DE EQUIPAMENTO COM BRILHO POR RARIDADE */
+.paperdoll-section {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+}
+
+.section-sub-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.section-sub-header h4 {
+    font-family: var(--font-title);
+    font-size: 1rem;
+    color: var(--gold-bright);
+    letter-spacing: 0.5px;
+}
+
+.paperdoll-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.paperdoll-slot {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.pd-slot-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--font-hud);
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 4px;
+    text-transform: uppercase;
+}
+
+.pd-actions-row {
+    display: flex;
+    gap: 4px;
+}
+
+.btn-slot-upgrade {
+    background: rgba(197, 160, 89, 0.2);
+    color: var(--gold-bright);
+    border: 1px solid var(--gold);
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-size: 0.68rem;
+    font-weight: 800;
+    font-family: var(--font-hud);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.btn-slot-upgrade:hover {
+    background: var(--gold);
+    color: #000;
+    box-shadow: 0 0 10px var(--gold-glow);
+}
+
+.btn-slot-action {
+    background: rgba(255, 71, 87, 0.15);
+    color: var(--danger-bright);
+    border: 1px solid rgba(255, 71, 87, 0.4);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.btn-slot-action:hover {
+    background: var(--danger);
+    color: #fff;
+}
+
+.pd-slot-body {
+    min-height: 52px;
+    display: flex;
+    align-items: center;
+}
+.slot-empty {
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    font-style: italic;
+    margin: auto;
+}
+
+.equipped-item-display {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+}
+.equipped-thumb {
+    width: 44px;
+    height: 44px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+    border: 1px solid var(--border-color);
+    flex-shrink: 0;
+}
+.equipped-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+.equipped-info strong {
+    font-family: var(--font-hud);
+    font-size: 0.84rem;
+    color: #ffffff;
+}
+
+/* ACADEMIA DE ATRIBUTOS */
+.academy-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+}
+
+.academy-attributes-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+}
+
+.academy-attr-row {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 8px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    transition: border-color 0.2s;
+}
+.academy-attr-row:hover {
+    border-color: var(--border-neon);
+}
+
+.attr-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.attr-icon {
+    font-size: 1.35rem;
+}
+.attr-meta strong {
+    font-family: var(--font-hud);
+    font-size: 0.85rem;
+    color: #ffffff;
+    display: block;
+}
+.attr-meta small {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+}
+
+.attr-value {
+    font-family: var(--font-hud);
+    font-weight: 800;
+    color: var(--gold-bright);
+    font-size: 0.85rem;
+}
+
+/* MOCHILA / FERREIRO COM GRID RESPONSIVO & HOVER ELEVATION */
+.inventory-column {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+}
+
+.inventory-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
+    gap: 12px;
+}
+
+.btn-dismantle {
+    background: rgba(168, 85, 247, 0.18);
+    border: 1px solid var(--arcane-purple);
+    color: #e9d5ff;
+}
+.btn-dismantle:hover {
+    background: var(--arcane-purple);
+    color: #fff;
+    box-shadow: 0 0 12px var(--arcane-glow);
+}
+
+/* ========================================================
+   7. ABA 4: ESCONDERIJO (IDLE & PRODUÇÃO PASSIVA)
+   ======================================================== */
+.esconderijo-container {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.qg-banner {
+    background: linear-gradient(135deg, rgba(17, 24, 39, 0.9), rgba(11, 12, 16, 0.95)), var(--bg-card);
+    border: 1px solid var(--border-neon);
+    border-radius: 14px;
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+}
+
+.qg-buildings-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 14px;
+}
+
+.building-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+    transition: transform 0.2s, border-color 0.2s;
+}
+.building-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--border-neon);
+}
+
+/* ========================================================
+   8. ABA 5: ROLETA DA SORTE DIÁRIA (CANVAS ANIMADO)
+   ======================================================== */
+.roleta-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 24px 16px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.7);
+}
+
+.wheel-canvas-wrapper {
+    position: relative;
+    width: 360px;
+    height: 360px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#wheelCanvas {
+    width: 360px;
+    height: 360px;
+    border-radius: 50%;
+    box-shadow: 0 0 25px rgba(102, 252, 241, 0.2), inset 0 0 20px rgba(0,0,0,0.8);
+    border: 3px solid var(--border-color);
+}
+
+.wheel-pointer {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-top: 28px solid var(--danger);
+    filter: drop-shadow(0 3px 6px rgba(0,0,0,0.8));
+    z-index: 10;
+}
+
+/* ========================================================
+   9. ABA 6: MAPA DO MUNDO (SVG INTERATIVO)
+   ======================================================== */
+.map-container {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    box-shadow: 0 8px 26px rgba(0,0,0,0.6);
+}
+
+.map-svg-wrap {
+    width: 100%;
+    background: #06070a;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    box-shadow: inset 0 0 40px rgba(0,0,0,0.9);
+}
+
+/* ========================================================
+   10. ABA 7: TREINAMENTO (AFK / TEMPO REAL)
+   ======================================================== */
+.training-container {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.training-options-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+}
+
+.train-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: transform 0.2s, border-color 0.2s;
+}
+.train-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--border-neon);
+}
+
+/* ========================================================
+   11. ABA 8: LOJA DO FERREIRO & ITENS
+   ======================================================== */
+.shop-inventory-container {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.shop-items-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 14px;
+}
+
+/* CARDS DE ITENS COM RARIDADES E ELEVAÇÃO AO HOVER */
+.item-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s, border-color 0.25s;
+}
+
+.item-card:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.7);
+}
+
+/* BORDAS & BRILHOS POR RARIDADE */
+.item-card.rarity-Comum {
+    border-color: #334155;
+}
+.item-card.rarity-Comum:hover {
+    border-color: #64748b;
+}
+
+.item-card.rarity-Raro {
+    border-color: var(--rarity-raro);
+    box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
+}
+.item-card.rarity-Raro:hover {
+    box-shadow: 0 0 18px rgba(56, 189, 248, 0.4);
+}
+
+.item-card.rarity-Épico {
+    border-color: var(--rarity-epico);
+    box-shadow: 0 0 14px rgba(168, 85, 247, 0.25);
+    background: linear-gradient(145deg, rgba(18, 21, 31, 0.95), rgba(168, 85, 247, 0.08));
+}
+.item-card.rarity-Épico:hover {
+    box-shadow: 0 0 22px rgba(168, 85, 247, 0.5);
+}
+
+.item-card.rarity-Lendário {
+    border-color: var(--rarity-lendario);
+    box-shadow: 0 0 18px rgba(245, 158, 11, 0.35);
+    background: linear-gradient(145deg, rgba(22, 18, 28, 0.95), rgba(245, 158, 11, 0.1));
+}
+.item-card.rarity-Lendário:hover {
+    box-shadow: 0 0 26px rgba(245, 158, 11, 0.6);
+}
+
+.item-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.rarity-badge {
+    font-family: var(--font-hud);
+    font-size: 0.66rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    padding: 2px 6px;
+    border-radius: 4px;
+    letter-spacing: 0.5px;
+}
+
+.rarity-Comum .rarity-badge {
+    background: rgba(100, 116, 139, 0.2);
+    color: #cbd5e1;
+    border: 1px solid #475569;
+}
+.rarity-Raro .rarity-badge {
+    background: rgba(56, 189, 248, 0.2);
+    color: #38bdf8;
+    border: 1px solid #38bdf8;
+}
+.rarity-Épico .rarity-badge {
+    background: rgba(168, 85, 247, 0.22);
+    color: #c084fc;
+    border: 1px solid #a855f7;
+}
+.rarity-Lendário .rarity-badge {
+    background: rgba(245, 158, 11, 0.25);
+    color: #fde047;
+    border: 1px solid #f59e0b;
+    box-shadow: 0 0 10px rgba(245, 158, 11, 0.35);
+}
+
+.item-image-wrap {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto;
+    background: rgba(0, 0, 0, 0.45);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.item-image-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 3px 6px rgba(0,0,0,0.8));
+}
+
+.item-details {
+    text-align: center;
+}
+.item-details h4 {
+    font-family: var(--font-hud);
+    font-size: 0.9rem;
+    color: #ffffff;
+    font-weight: 700;
+    margin-bottom: 3px;
+}
+
+.item-stats-chips {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+}
+.stat-chip {
+    font-family: var(--font-hud);
+    font-size: 0.68rem;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: #ced6e0;
+}
+
+.item-card-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-top: auto;
+}
+.item-price {
+    font-family: var(--font-hud);
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: var(--gold-bright);
+    text-align: center;
+}
+
+/* ========================================================
+   12. TOOLTIP COMPARATIVO NO HOVER
+   ======================================================== */
+.item-tooltip-box {
+    position: fixed;
+    z-index: 9999;
+    pointer-events: none;
+    background: rgba(11, 14, 23, 0.96);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid var(--border-neon);
+    border-radius: 12px;
+    padding: 14px;
+    width: 320px;
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.9), 0 0 20px rgba(102, 252, 241, 0.15);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    animation: tooltipFadeIn 0.18s ease-out;
+}
+
+@keyframes tooltipFadeIn {
+    from { opacity: 0; transform: scale(0.96); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.tooltip-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.tooltip-header h4 {
+    font-family: var(--font-hud);
+    font-size: 0.95rem;
+    color: #ffffff;
+    font-weight: 800;
+}
+.slot-type {
+    font-family: var(--font-hud);
+    font-size: 0.68rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+}
+.tooltip-desc {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+.tooltip-comparison-table {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 8px 10px;
+    margin: 3px 0;
+}
+
+.tt-col {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    font-size: 0.72rem;
+    font-family: var(--font-hud);
+    flex: 1;
+}
+.tt-col-title {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    font-weight: 700;
+    margin-bottom: 2px;
+    text-transform: uppercase;
+}
+.tt-stat-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.tt-arrow {
+    font-size: 1.1rem;
+    color: var(--neon-cyan);
+    padding: 0 8px;
+}
+
+.diff-badge {
+    font-family: var(--font-hud);
+    font-size: 0.7rem;
+    font-weight: 800;
+    padding: 1px 5px;
+    border-radius: 4px;
+}
+.diff-pos {
+    background: rgba(46, 213, 115, 0.25);
+    color: var(--success-bright);
+    border: 1px solid var(--success);
+}
+.diff-neg {
+    background: rgba(255, 71, 87, 0.25);
+    color: var(--danger-bright);
+    border: 1px solid var(--danger);
+}
+.diff-neutral {
+    color: var(--text-muted);
+}
+.tooltip-footer {
+    display: flex;
+    justify-content: flex-end;
+    font-family: var(--font-hud);
+    font-size: 0.82rem;
+    font-weight: 800;
+    color: var(--gold-bright);
+    border-top: 1px solid var(--border-color);
+    padding-top: 6px;
+}
+
+/* ========================================================
+   13. MODAIS: AUTENTICAÇÃO E CRIAÇÃO DE PERSONAGEM
+   ======================================================== */
+.creation-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(5, 6, 10, 0.94);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+}
+
+.creation-modal {
+    background: var(--bg-card);
+    border: 1px solid var(--border-neon);
+    border-radius: 16px;
+    max-width: 760px;
+    width: 100%;
+    max-height: 92vh;
+    overflow-y: auto;
+    padding: 26px;
+    box-shadow: 0 16px 50px rgba(0, 0, 0, 0.9), 0 0 30px rgba(102, 252, 241, 0.12);
+    animation: modalScaleIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes modalScaleIn {
+    from { opacity: 0; transform: scale(0.94); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.auth-modal {
+    max-width: 440px !important;
+}
+
+.creation-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+.creation-header h2 {
+    font-family: var(--font-title);
+    color: var(--gold-bright);
+    font-size: 1.55rem;
+    letter-spacing: 0.5px;
+    text-shadow: 0 0 12px var(--gold-glow);
+}
+.creation-header p {
+    color: var(--text-muted);
+    font-size: 0.84rem;
+}
+
+.auth-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.auth-tab-btn {
+    flex: 1;
+    padding: 11px;
+    background: #0f121d;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    color: var(--text-muted);
+    font-family: var(--font-hud);
+    font-weight: 800;
+    font-size: 0.92rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.auth-tab-btn.active {
+    background: var(--primary);
+    color: #ffffff;
+    border-color: var(--primary-light);
+    box-shadow: 0 0 14px rgba(99, 102, 241, 0.4);
+}
+
+.auth-error {
+    background: rgba(255, 71, 87, 0.15);
+    border: 1px solid var(--danger);
+    color: #ff9494;
+    padding: 10px 14px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    font-size: 0.85rem;
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 14px;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-family: var(--font-hud);
+    font-weight: 700;
+    color: var(--gold-bright);
+    font-size: 0.86rem;
+}
+
+input[type="text"],
+input[type="password"] {
+    width: 100%;
+    padding: 11px 14px;
+    background: #07080b;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    color: #ffffff;
+    font-family: var(--font-hud);
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+input[type="text"]:focus,
+input[type="password"]:focus {
+    border-color: var(--neon-cyan);
+    box-shadow: 0 0 12px rgba(102, 252, 241, 0.25);
+}
+
+.classes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(135px, 1fr));
+    gap: 8px;
+    margin-top: 6px;
+}
+.weapons-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(125px, 1fr));
+    gap: 8px;
+    margin-top: 6px;
+}
+
+.choice-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 10px 6px;
+    text-align: center;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    transition: all 0.2s ease;
+}
+.choice-card:hover {
+    border-color: var(--border-neon);
+    transform: translateY(-2px);
+}
+.choice-card.selected {
+    border-color: var(--neon-cyan);
+    box-shadow: 0 0 14px rgba(102, 252, 241, 0.35);
+    background: linear-gradient(180deg, rgba(14, 17, 26, 0.9), rgba(102, 252, 241, 0.08));
+}
+
+.choice-thumb {
+    width: 44px;
+    height: 44px;
+    object-fit: contain;
+}
+.choice-title {
+    font-family: var(--font-hud);
+    font-size: 0.82rem;
+    font-weight: 800;
+    color: #ffffff;
+}
+.choice-sub {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+}
+
+/* ========================================================
+   14. BOTÕES & UTILITÁRIOS CYBERPUNK / DARK FANTASY
+   ======================================================== */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 9px 16px;
+    border-radius: 8px;
+    font-family: var(--font-hud);
+    font-weight: 800;
+    font-size: 0.88rem;
+    cursor: pointer;
+    border: none;
+    transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+    gap: 6px;
+    letter-spacing: 0.4px;
+    user-select: none;
+}
+.btn:hover {
+    filter: brightness(1.15);
+    transform: translateY(-2px);
+}
+.btn:active {
+    transform: translateY(0);
+}
+.btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    filter: none;
+    transform: none;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #4f46e5, #6366f1);
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35);
+}
+.btn-warning {
+    background: linear-gradient(135deg, #c5a059, #ffd700);
+    color: #07080b;
+    box-shadow: 0 4px 14px var(--gold-glow);
+}
+.btn-danger {
+    background: linear-gradient(135deg, #e11d48, #ff4757);
+    color: #ffffff;
+    box-shadow: 0 4px 14px var(--danger-glow);
+}
+.btn-success {
+    background: linear-gradient(135deg, #10b981, #2ed573);
+    color: #07080b;
+    box-shadow: 0 4px 14px var(--success-glow);
+}
+.btn-secondary {
+    background: #1f2833;
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.btn-outline-danger {
+    background: transparent;
+    border: 1px solid var(--danger);
+    color: var(--danger-bright);
+}
+.btn-outline-danger:hover {
+    background: rgba(255, 71, 87, 0.15);
+}
+
+.btn-outline-secondary {
+    background: transparent;
+    border: 1px solid #374151;
+    color: #cbd5e1;
+}
+.btn-outline-secondary:hover {
+    background: rgba(75, 85, 99, 0.3);
+    color: #ffffff;
+}
+
+.btn-sm {
+    padding: 5px 10px;
+    font-size: 0.78rem;
+}
+.btn-large {
+    padding: 13px 22px;
+    font-size: 0.98rem;
+    width: 100%;
+}
+
+/* PULSE NEON NOS BOTÕES PRINCIPAIS DE AÇÃO */
+.btn-glow {
+    animation: neonButtonPulse 2.4s infinite ease-in-out;
+}
+
+@keyframes neonButtonPulse {
+    0%, 100% {
+        box-shadow: 0 0 12px rgba(102, 252, 241, 0.3);
+    }
+    50% {
+        box-shadow: 0 0 24px rgba(102, 252, 241, 0.6), 0 0 35px rgba(79, 70, 229, 0.35);
+    }
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* ========================================================
+   15. RESPONSIVIDADE (MOBILE & TABLET DASHBOARD)
+   ======================================================== */
+@media (max-width: 1024px) {
+    .profile-layout-grid {
+        grid-template-columns: 1fr;
+    }
+    .wheel-canvas-wrapper {
+        width: 330px;
+        height: 330px;
+    }
+    #wheelCanvas {
+        width: 330px !important;
+        height: 330px !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .hud-global {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+        padding: 10px 12px;
+    }
+    .hud-left {
+        justify-content: flex-start;
+    }
+    .hud-right {
+        justify-content: space-between;
+    }
+    .bar-container {
+        width: 100%;
+    }
+    .arena-visual {
+        flex-direction: column;
+        gap: 18px;
+        padding: 18px 12px;
+    }
+    .combatant-card {
+        width: 100%;
+    }
+    .tabs-nav {
+        gap: 4px;
+        padding: 4px;
+    }
+    .tab-btn {
+        min-width: 82px;
+        padding: 6px 4px;
+    }
+    .tab-text {
+        font-size: 0.72rem;
+    }
+    .wheel-canvas-wrapper {
+        width: 290px;
+        height: 290px;
+    }
+    #wheelCanvas {
+        width: 290px !important;
+        height: 290px !important;
+    }
+}
+
+/* ========================================================
+   16. ELEMENTOS COMPLEMENTARES DE COMBATE E ARENA
+   ======================================================== */
+.combat-controls-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.actions-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.btn-action {
+    min-width: 130px;
+    font-size: 0.88rem;
+}
+
+.defeat-banner {
+    background: rgba(255, 71, 87, 0.15);
+    border: 1px solid var(--danger);
+    border-radius: 10px;
+    padding: 12px 16px;
+    text-align: center;
+    color: var(--danger-bright);
+    font-family: var(--font-hud);
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.pulse-ring {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 2px solid var(--danger);
+    animation: pulseRingAnim 1.5s ease-out infinite;
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+@keyframes pulseRingAnim {
+    0%   { transform: scale(0.5); opacity: 0.8; }
+    70%  { transform: scale(1.5); opacity: 0; }
+    100% { transform: scale(0.5); opacity: 0; }
+}
+
+/* LOGS DE COMBATE */
+.combat-log-wrapper {
+    background: rgba(7, 8, 11, 0.85);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.log-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background: rgba(14, 17, 26, 0.9);
+    border-bottom: 1px solid var(--border-color);
+    font-family: var(--font-hud);
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--text-muted);
+}
+
+.btn-clear-logs {
+    background: transparent;
+    border: 1px solid #2d3748;
+    color: var(--text-muted);
+    padding: 3px 8px;
+    border-radius: 5px;
+    font-size: 0.72rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.btn-clear-logs:hover {
+    border-color: var(--border-neon);
+    color: var(--neon-cyan);
+}
+
+.combat-log-box {
+    padding: 8px 12px;
+    max-height: 180px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    font-family: var(--font-hud);
+    font-size: 0.78rem;
+}
+
+.log-line {
+    padding: 4px 8px;
+    border-radius: 5px;
+    line-height: 1.4;
+    color: var(--text-muted);
+    border-left: 2px solid transparent;
+}
+
+.log-line.hero-action {
+    color: #a5b4fc;
+    border-left-color: var(--primary-light);
+    background: rgba(79, 70, 229, 0.06);
+}
+
+.log-line.enemy-action {
+    color: var(--danger-bright);
+    border-left-color: var(--danger);
+    background: rgba(255, 71, 87, 0.06);
+}
+
+.log-line.loot-action {
+    color: var(--gold-bright);
+    border-left-color: var(--gold);
+    background: rgba(197, 160, 89, 0.06);
+}
+
+/* ========================================================
+   17. CABEÇALHOS DE SEÇÕES / SECTION HEADERS
+   ======================================================== */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+
+.section-header h3 {
+    font-family: var(--font-title);
+    font-size: 1.1rem;
+    color: var(--gold-bright);
+    letter-spacing: 0.4px;
+}
+
+.section-desc {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+    margin-bottom: 4px;
+}
+
+.title-with-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.badge-neutral {
+    font-family: var(--font-hud);
+    font-size: 0.72rem;
+    background: rgba(100, 116, 139, 0.2);
+    color: #94a3b8;
+    border: 1px solid #334155;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 700;
+}
+
+.badge-accent {
+    font-family: var(--font-hud);
+    font-size: 0.72rem;
+    background: rgba(168, 85, 247, 0.2);
+    color: #c084fc;
+    border: 1px solid rgba(168, 85, 247, 0.45);
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 700;
+}
+
+.profile-badges-row {
+    display: flex;
+    gap: 5px;
+    margin: 4px 0;
+    flex-wrap: wrap;
+}
+
+.passive-quote {
+    font-size: 0.74rem;
+    color: #a5b4fc;
+    font-style: italic;
+}
+
+.ferreiro-legend {
+    display: flex;
+    gap: 12px;
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    font-family: var(--font-hud);
+}
+
+.inv-empty-msg {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 24px;
+    color: var(--text-muted);
+    font-style: italic;
+    background: var(--bg-surface);
+    border: 1px dashed var(--border-color);
+    border-radius: 10px;
+    font-size: 0.85rem;
+}
+
+.btn-attr-up {
+    font-size: 0.78rem !important;
+    padding: 5px 10px !important;
+    font-weight: 800;
+}
+
+/* ========================================================
+   18. MASMORRA — CABEÇALHO & ARENA DO CHEFE
+   ======================================================== */
+.dungeon-header-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-neon);
+    border-radius: 14px;
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+}
+
+.dungeon-header-card h3 {
+    font-family: var(--font-title);
+    font-size: 1.35rem;
+    color: #e0e7ff;
+    letter-spacing: 0.5px;
+}
+
+.dungeon-header-card p {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+    max-width: 520px;
+}
+
+.dungeon-progress-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(14, 17, 26, 0.9);
+    border: 1px solid rgba(99, 102, 241, 0.4);
+    padding: 6px 14px;
+    border-radius: 10px;
+    font-family: var(--font-hud);
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+.dungeon-progress-pill strong {
+    color: #c7d2fe;
+    font-weight: 800;
+}
+
+.dungeon-battle-panel {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    box-shadow: 0 8px 26px rgba(0, 0, 0, 0.6);
+}
+
+.boss-avatar {
+    border: 2px solid #f59e0b !important;
+    box-shadow: 0 0 20px rgba(245, 158, 11, 0.35) !important;
+    background: radial-gradient(circle, rgba(245, 158, 11, 0.1) 0%, rgba(0, 0, 0, 0.8) 70%) !important;
+}
+
+.dungeon-floors-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+    max-height: 500px;
+    overflow-y: auto;
+    padding: 4px;
+}
+
+/* ========================================================
+   19. ESCONDERIJO / IDLE BUILDINGS
+   ======================================================== */
+.hideout-container {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.hideout-header-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-neon);
+    border-radius: 14px;
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 14px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+}
+
+.hideout-header-card h3 {
+    font-family: var(--font-title);
+    font-size: 1.3rem;
+    color: var(--gold-bright);
+}
+
+.hideout-header-card p {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+    max-width: 520px;
+}
+
+.hideout-buildings-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 14px;
+}
+
+.building-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.building-icon {
+    font-size: 2rem;
+    line-height: 1;
+}
+
+.building-header h4 {
+    font-family: var(--font-title);
+    font-size: 1rem;
+    color: var(--gold-bright);
+}
+
+.building-rate {
+    font-size: 0.75rem;
+    color: var(--neon-cyan);
+    font-family: var(--font-hud);
+    margin-top: 2px;
+    display: block;
+}
+
+.building-storage-box {
+    background: rgba(7, 8, 11, 0.8);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.building-storage-box small {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.building-storage-box strong {
+    font-family: var(--font-hud);
+    font-size: 1rem;
+    color: var(--gold-bright);
+    font-weight: 800;
+}
+
+.building-upgrade-footer {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+}
+
+.building-upgrade-footer small {
+    font-size: 0.74rem;
+    color: var(--text-muted);
+}
+
+/* ========================================================
+   20. ROLETA DA SORTE — WHEEL HEADER & ACTIONS
+   ======================================================== */
+.wheel-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 26px 16px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7);
+}
+
+.wheel-header {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.wheel-header h3 {
+    font-family: var(--font-title);
+    font-size: 1.4rem;
+    color: var(--gold-bright);
+    text-shadow: 0 0 12px var(--gold-glow);
+}
+
+.wheel-header p {
+    font-size: 0.84rem;
+    color: var(--text-muted);
+}
+
+.wheel-spins-badge {
+    display: inline-block;
+    background: rgba(197, 160, 89, 0.2);
+    color: var(--gold-bright);
+    border: 1px solid var(--gold);
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-family: var(--font-hud);
+    font-size: 0.84rem;
+    font-weight: 800;
+    box-shadow: 0 0 10px var(--gold-glow);
+    animation: pulseGlow 2s infinite ease-in-out;
+}
+
+.wheel-ticker-arrow {
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1.8rem;
+    color: var(--danger);
+    text-shadow: 0 0 10px var(--danger-glow);
+    z-index: 10;
+    line-height: 1;
+}
+
+.wheel-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+    max-width: 360px;
+}
+
+/* ========================================================
+   21. MAPA DO MUNDO — SVG INTERATIVO & REGION INFO
+   ======================================================== */
+.world-map-container {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    box-shadow: 0 8px 26px rgba(0, 0, 0, 0.6);
+}
+
+.world-map-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.world-map-header h3 {
+    font-family: var(--font-title);
+    font-size: 1.3rem;
+    color: var(--neon-cyan);
+    text-shadow: 0 0 10px rgba(102, 252, 241, 0.3);
+}
+
+.world-map-header p {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+}
+
+.current-location-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(14, 17, 26, 0.9);
+    border: 1px solid var(--success);
+    padding: 6px 14px;
+    border-radius: 10px;
+    font-family: var(--font-hud);
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+    box-shadow: 0 0 10px rgba(46, 213, 115, 0.15);
+}
+
+.current-location-pill strong {
+    color: var(--success-bright);
+    font-weight: 800;
+}
+
+.svg-map-wrapper {
+    width: 100%;
+    background: #06070a;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.9);
+}
+
+.world-map-svg {
+    width: 100%;
+    height: auto;
+    max-height: 360px;
+}
+
+/* SVG MAP — NÓS DE REGIÃO */
+.map-road {
+    fill: none;
+    stroke: #1f2833;
+    stroke-width: 3;
+    stroke-dasharray: 10 5;
+}
+
+.map-node-group {
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.map-node-base {
+    fill: #131c2e;
+    stroke: #2d3d55;
+    stroke-width: 2;
+    transition: fill 0.2s, stroke 0.2s;
+}
+
+.map-node-base.node-active,
+.map-node-group.selected .map-node-base {
+    fill: rgba(102, 252, 241, 0.15);
+    stroke: var(--neon-cyan);
+    filter: url(#glowFilter);
+}
+
+.map-node-group:hover .map-node-base {
+    fill: rgba(102, 252, 241, 0.1);
+    stroke: var(--neon-teal);
+}
+
+.map-node-ring {
+    fill: none;
+    stroke: rgba(102, 252, 241, 0.15);
+    stroke-width: 2;
+    animation: pulseRingAnim 3s ease-out infinite;
+}
+
+.map-node-icon {
+    font-size: 26px;
+    text-anchor: middle;
+    dominant-baseline: middle;
+}
+
+.map-node-label {
+    fill: #ffffff;
+    font-size: 14px;
+    text-anchor: middle;
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+}
+
+.map-node-level {
+    fill: #66fcf1;
+    font-size: 12px;
+    text-anchor: middle;
+    font-family: 'Exo 2', sans-serif;
+}
+
+.selected-region-card {
+    background: rgba(14, 17, 26, 0.9);
+    border: 1px solid var(--border-neon);
+    border-radius: 12px;
+    padding: 14px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: 0 0 20px rgba(102, 252, 241, 0.1);
+}
+
+.region-info-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.region-big-icon {
+    font-size: 2.5rem;
+    line-height: 1;
+}
+
+.region-info-header h4 {
+    font-family: var(--font-title);
+    font-size: 1.1rem;
+    color: #ffffff;
+}
+
+.monsters-pills-row {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.monster-pill {
+    background: rgba(255, 71, 87, 0.1);
+    border: 1px solid rgba(255, 71, 87, 0.3);
+    color: var(--danger-bright);
+    padding: 3px 8px;
+    border-radius: 8px;
+    font-size: 0.74rem;
+    font-family: var(--font-hud);
+    font-weight: 700;
+}
+
+/* ========================================================
+   22. TREINAMENTO — VISUAL AFK COM DUMMY E TIMER
+   ======================================================== */
+.training-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.training-intro {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 16px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+}
+
+.training-intro h3 {
+    font-family: var(--font-title);
+    font-size: 1.2rem;
+    color: var(--neon-cyan);
+}
+
+.training-intro p {
+    font-size: 0.84rem;
+    color: var(--text-muted);
+}
+
+.training-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+}
+
+.active-training-card {
+    background: var(--bg-card);
+    border: 1px solid var(--neon-cyan);
+    border-radius: 14px;
+    padding: 18px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    box-shadow: 0 0 20px rgba(102, 252, 241, 0.15), 0 8px 26px rgba(0, 0, 0, 0.6);
+}
+
+.training-in-progress-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.training-status-pulse {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--success-bright);
+    box-shadow: 0 0 10px var(--success-glow);
+    animation: statusBlink 1.5s ease-in-out infinite;
+    flex-shrink: 0;
+}
+
+@keyframes statusBlink {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(0.85); }
+}
+
+.training-in-progress-header small {
+    font-family: var(--font-hud);
+    font-size: 0.72rem;
+    color: var(--neon-cyan);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.training-in-progress-header h3 {
+    font-family: var(--font-title);
+    font-size: 1.15rem;
+    color: #ffffff;
+}
+
+/* ANIMAÇÃO DO PERSONAGEM VS. DUMMY */
+.training-arena-animation {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    background: radial-gradient(circle at 50% 60%, rgba(31, 40, 51, 0.6) 0%, rgba(7, 8, 11, 0.95) 80%);
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid var(--border-color);
+    min-height: 120px;
+    position: relative;
+    overflow: hidden;
+}
+
+.training-hero-sprite {
+    width: 72px;
+    height: 72px;
+}
+.training-hero-sprite img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.8));
+}
+
+.training-dummy-sprite {
+    width: 60px;
+    height: 60px;
+    opacity: 0.9;
+}
+.training-dummy-sprite img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.8));
+}
+
+.training-sparks {
+    font-size: 1.6rem;
+    animation: sparksAnim 0.6s ease-in-out infinite alternate;
+}
+
+@keyframes sparksAnim {
+    from { transform: scale(0.8) rotate(-10deg); opacity: 0.7; }
+    to   { transform: scale(1.2) rotate(10deg); opacity: 1; }
+}
+
+.anim-training-hero {
+    animation: heroAttack 0.8s ease-in-out infinite alternate;
+}
+
+@keyframes heroAttack {
+    from { transform: translateX(0) rotate(0deg); }
+    to   { transform: translateX(6px) rotate(5deg); }
+}
+
+.anim-training-dummy {
+    animation: dummyHit 0.8s ease-in-out infinite alternate;
+}
+
+@keyframes dummyHit {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(-5deg) translateX(3px); }
+}
+
+/* TIMER & PROGRESSO */
+.timer-display {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+}
+
+.timer-digits {
+    font-family: var(--font-hud);
+    font-size: 2.8rem;
+    font-weight: 900;
+    color: var(--neon-cyan);
+    letter-spacing: 4px;
+    text-shadow: 0 0 16px rgba(102, 252, 241, 0.5);
+    line-height: 1;
+}
+
+.timer-unit {
+    font-size: 0.76rem;
+    color: var(--text-muted);
+    font-family: var(--font-hud);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.training-progress-bar {
+    width: 100%;
+    height: 12px;
+    background: #07080b;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+}
+
+.train-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--neon-teal), var(--neon-cyan));
+    box-shadow: 0 0 12px rgba(102, 252, 241, 0.4);
+    transition: width 1s linear;
+}
+
+.training-rewards-preview {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.reward-pill {
+    font-family: var(--font-hud);
+    font-size: 0.8rem;
+    font-weight: 800;
+    background: rgba(14, 17, 26, 0.9);
+    border: 1px solid var(--border-color);
+    padding: 4px 10px;
+    border-radius: 10px;
+    color: var(--text-muted);
+}
+
+.training-active-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* CARDS DE OPÇÕES DE TREINO */
+.train-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+}
+
+.train-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--border-neon);
+    box-shadow: 0 8px 20px rgba(102, 252, 241, 0.1);
+}
+
+.train-card-icon {
+    font-size: 2rem;
+    text-align: center;
+}
+
+.train-card-title {
+    font-family: var(--font-title);
+    font-size: 0.98rem;
+    color: #ffffff;
+    text-align: center;
+}
+
+.train-reward-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+}
+
+.train-reward-row strong {
+    color: var(--success-bright);
+    font-family: var(--font-hud);
+    font-weight: 800;
+}
+
+/* ========================================================
+   23. LOJA — HEADER & SHOP SECTION
+   ======================================================== */
+.shop-section {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.shop-header-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+/* ========================================================
+   24. SEÇÃO DE AVENTURA — ADICIONAIS (ABA 1)
+   ======================================================== */
+#tabContentAventura h3,
+#tabContentAventura h4 {
+    font-family: var(--font-title);
+}
+
+.adv-idle-box h3 {
+    font-family: var(--font-title);
+    font-size: 1.15rem;
+    color: var(--text-main);
+}
+
+.adv-idle-box p {
+    font-size: 0.84rem;
+    color: var(--text-muted);
+    max-width: 400px;
+}
+
+.combatant-card h4 {
+    font-family: var(--font-hud);
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: #ffffff;
+}
+
+.combatant-hp small {
+    font-family: var(--font-hud);
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    text-align: center;
+}
+
+/* ========================================================
+   25. RESPONSIVIDADE ADICIONAL PARA MOBILE (max-width 600px)
+   ======================================================== */
+@media (max-width: 600px) {
+    .app-layout {
+        padding: 8px 10px 28px 10px;
+    }
+
+    .dungeon-floors-list,
+    .hideout-buildings-grid,
+    .training-grid,
+    .academy-attributes-grid,
+    .paperdoll-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .shop-items-grid {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    }
+
+    .hud-global {
+        top: 4px;
+    }
+
+    .tab-text {
+        display: none;
+    }
+
+    .tab-btn {
+        min-width: 48px;
+        padding: 8px 6px;
+    }
+
+    .tab-icon {
+        font-size: 1.3rem;
+        margin-bottom: 0;
+    }
+
+    .world-map-svg {
+        max-height: 240px;
+    }
+
+    .timer-digits {
+        font-size: 2.2rem;
+    }
+
+    .wheel-canvas-wrapper {
+        width: 260px;
+        height: 260px;
+    }
+    #wheelCanvas {
+        width: 260px !important;
+        height: 260px !important;
+    }
+}
+
+/* ========================================================
+   16. ELEMENTOS COMPLEMENTARES DE COMBATE E ARENA
+   ======================================================== */
+.combat-controls-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.actions-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.btn-action {
+    min-width: 130px;
+    font-size: 0.88rem;
+}
+
+.defeat-banner {
+    background: rgba(255, 71, 87, 0.15);
+    border: 1px solid var(--danger);
+    border-radius: 10px;
+    padding: 12px 16px;
+    text-align: center;
+    color: var(--danger-bright);
+    font-family: var(--font-hud);
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.pulse-ring {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 2px solid var(--danger);
+    animation: pulseRingAnim 1.5s ease-out infinite;
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+@keyframes pulseRingAnim {
+    0%   { transform: scale(0.5); opacity: 0.8; }
+    70%  { transform: scale(1.5); opacity: 0; }
+    100% { transform: scale(0.5); opacity: 0; }
+}
+
+/* LOGS DE COMBATE */
+.combat-log-wrapper {
+    background: rgba(7, 8, 11, 0.85);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.log-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background: rgba(14, 17, 26, 0.9);
+    border-bottom: 1px solid var(--border-color);
+    font-family: var(--font-hud);
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--text-muted);
+}
+
+.btn-clear-logs {
+    background: transparent;
+    border: 1px solid #2d3748;
+    color: var(--text-muted);
+    padding: 3px 8px;
+    border-radius: 5px;
+    font-size: 0.72rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.btn-clear-logs:hover {
+    border-color: var(--border-neon);
+    color: var(--neon-cyan);
+}
+
+.combat-log-box {
+    padding: 8px 12px;
+    max-height: 180px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    font-family: var(--font-hud);
+    font-size: 0.78rem;
+}
+
+.log-line {
+    padding: 4px 8px;
+    border-radius: 5px;
+    line-height: 1.4;
+    color: var(--text-muted);
+    border-left: 2px solid transparent;
+}
+
+.log-line.hero-action {
+    color: #a5b4fc;
+    border-left-color: var(--primary-light);
+    background: rgba(79, 70, 229, 0.06);
+}
+
+.log-line.enemy-action {
+    color: var(--danger-bright);
+    border-left-color: var(--danger);
+    background: rgba(255, 71, 87, 0.06);
+}
+
+.log-line.loot-action {
+    color: var(--gold-bright);
+    border-left-color: var(--gold);
+    background: rgba(197, 160, 89, 0.06);
+}
+
+/* ========================================================
+   17. CABEÇALHOS DE SEÇÕES / SECTION HEADERS
+   ======================================================== */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+
+.section-header h3 {
+    font-family: var(--font-title);
+    font-size: 1.1rem;
+    color: var(--gold-bright);
+    letter-spacing: 0.4px;
+}
+
+.section-desc {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+    margin-bottom: 4px;
+}
+
+.title-with-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.badge-neutral {
+    font-family: var(--font-hud);
+    font-size: 0.72rem;
+    background: rgba(100, 116, 139, 0.2);
+    color: #94a3b8;
+    border: 1px solid #334155;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 700;
+}
+
+.badge-accent {
+    font-family: var(--font-hud);
+    font-size: 0.72rem;
+    background: rgba(168, 85, 247, 0.2);
+    color: #c084fc;
+    border: 1px solid rgba(168, 85, 247, 0.45);
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 700;
+}
+
+.profile-badges-row {
+    display: flex;
+    gap: 5px;
+    margin: 4px 0;
+    flex-wrap: wrap;
+}
+
+.passive-quote {
+    font-size: 0.74rem;
+    color: #a5b4fc;
+    font-style: italic;
+}
+
+.ferreiro-legend {
+    display: flex;
+    gap: 12px;
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    font-family: var(--font-hud);
+}
+
+.inv-empty-msg {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 24px;
+    color: var(--text-muted);
+    font-style: italic;
+    background: var(--bg-surface);
+    border: 1px dashed var(--border-color);
+    border-radius: 10px;
+    font-size: 0.85rem;
+}
+
+.btn-attr-up {
+    font-size: 0.78rem !important;
+    padding: 5px 10px !important;
+    font-weight: 800;
+}
+
+/* ========================================================
+   18. MASMORRA — CABEÇALHO & ARENA DO CHEFE
+   ======================================================== */
+.dungeon-header-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-neon);
+    border-radius: 14px;
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+}
+
+.dungeon-header-card h3 {
+    font-family: var(--font-title);
+    font-size: 1.35rem;
+    color: #e0e7ff;
+    letter-spacing: 0.5px;
+}
+
+.dungeon-header-card p {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+    max-width: 520px;
+}
+
+.dungeon-progress-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(14, 17, 26, 0.9);
+    border: 1px solid rgba(99, 102, 241, 0.4);
+    padding: 6px 14px;
+    border-radius: 10px;
+    font-family: var(--font-hud);
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+.dungeon-progress-pill strong {
+    color: #c7d2fe;
+    font-weight: 800;
+}
+
+.dungeon-battle-panel {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    box-shadow: 0 8px 26px rgba(0, 0, 0, 0.6);
+}
+
+.boss-avatar {
+    border: 2px solid #f59e0b !important;
+    box-shadow: 0 0 20px rgba(245, 158, 11, 0.35) !important;
+    background: radial-gradient(circle, rgba(245, 158, 11, 0.1) 0%, rgba(0, 0, 0, 0.8) 70%) !important;
+}
+
+.dungeon-floors-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+    max-height: 500px;
+    overflow-y: auto;
+    padding: 4px;
+}
+
+/* ========================================================
+   19. ESCONDERIJO / IDLE BUILDINGS
+   ======================================================== */
+.hideout-container {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.hideout-header-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-neon);
+    border-radius: 14px;
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 14px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+}
+
+.hideout-header-card h3 {
+    font-family: var(--font-title);
+    font-size: 1.3rem;
+    color: var(--gold-bright);
+}
+
+.hideout-header-card p {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+    max-width: 520px;
+}
+
+.hideout-buildings-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 14px;
+}
+
+.building-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.building-icon {
+    font-size: 2rem;
+    line-height: 1;
+}
+
+.building-header h4 {
+    font-family: var(--font-title);
+    font-size: 1rem;
+    color: var(--gold-bright);
+}
+
+.building-rate {
+    font-size: 0.75rem;
+    color: var(--neon-cyan);
+    font-family: var(--font-hud);
+    margin-top: 2px;
+    display: block;
+}
+
+.building-storage-box {
+    background: rgba(7, 8, 11, 0.8);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.building-storage-box small {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.building-storage-box strong {
+    font-family: var(--font-hud);
+    font-size: 1rem;
+    color: var(--gold-bright);
+    font-weight: 800;
+}
+
+.building-upgrade-footer {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+}
+
+.building-upgrade-footer small {
+    font-size: 0.74rem;
+    color: var(--text-muted);
+}
+
+/* ========================================================
+   20. ROLETA DA SORTE — WHEEL HEADER & ACTIONS
+   ======================================================== */
+.wheel-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 26px 16px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7);
+}
+
+.wheel-header {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.wheel-header h3 {
+    font-family: var(--font-title);
+    font-size: 1.4rem;
+    color: var(--gold-bright);
+    text-shadow: 0 0 12px var(--gold-glow);
+}
+
+.wheel-header p {
+    font-size: 0.84rem;
+    color: var(--text-muted);
+}
+
+.wheel-spins-badge {
+    display: inline-block;
+    background: rgba(197, 160, 89, 0.2);
+    color: var(--gold-bright);
+    border: 1px solid var(--gold);
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-family: var(--font-hud);
+    font-size: 0.84rem;
+    font-weight: 800;
+    box-shadow: 0 0 10px var(--gold-glow);
+    animation: pulseGlow 2s infinite ease-in-out;
+}
+
+.wheel-ticker-arrow {
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1.8rem;
+    color: var(--danger);
+    text-shadow: 0 0 10px var(--danger-glow);
+    z-index: 10;
+    line-height: 1;
+}
+
+.wheel-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+    max-width: 360px;
+}
+
+/* ========================================================
+   21. MAPA DO MUNDO — SVG INTERATIVO & REGION INFO
+   ======================================================== */
+.world-map-container {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    box-shadow: 0 8px 26px rgba(0, 0, 0, 0.6);
+}
+
+.world-map-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.world-map-header h3 {
+    font-family: var(--font-title);
+    font-size: 1.3rem;
+    color: var(--neon-cyan);
+    text-shadow: 0 0 10px rgba(102, 252, 241, 0.3);
+}
+
+.world-map-header p {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+}
+
+.current-location-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(14, 17, 26, 0.9);
+    border: 1px solid var(--success);
+    padding: 6px 14px;
+    border-radius: 10px;
+    font-family: var(--font-hud);
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+    box-shadow: 0 0 10px rgba(46, 213, 115, 0.15);
+}
+
+.current-location-pill strong {
+    color: var(--success-bright);
+    font-weight: 800;
+}
+
+.svg-map-wrapper {
+    width: 100%;
+    background: #06070a;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.9);
+}
+
+.world-map-svg {
+    width: 100%;
+    height: auto;
+    max-height: 360px;
+}
+
+/* SVG MAP — NÓS DE REGIÃO */
+.map-road {
+    fill: none;
+    stroke: #1f2833;
+    stroke-width: 3;
+    stroke-dasharray: 10 5;
+}
+
+.map-node-group {
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.map-node-base {
+    fill: #131c2e;
+    stroke: #2d3d55;
+    stroke-width: 2;
+    transition: fill 0.2s, stroke 0.2s;
+}
+
+.map-node-base.node-active,
+.map-node-group.selected .map-node-base {
+    fill: rgba(102, 252, 241, 0.15);
+    stroke: var(--neon-cyan);
+    filter: url(#glowFilter);
+}
+
+.map-node-group:hover .map-node-base {
+    fill: rgba(102, 252, 241, 0.1);
+    stroke: var(--neon-teal);
+}
+
+.map-node-ring {
+    fill: none;
+    stroke: rgba(102, 252, 241, 0.15);
+    stroke-width: 2;
+    animation: pulseRingAnim 3s ease-out infinite;
+}
+
+.map-node-icon {
+    font-size: 26px;
+    text-anchor: middle;
+    dominant-baseline: middle;
+}
+
+.map-node-label {
+    fill: #ffffff;
+    font-size: 14px;
+    text-anchor: middle;
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+}
+
+.map-node-level {
+    fill: #66fcf1;
+    font-size: 12px;
+    text-anchor: middle;
+    font-family: 'Exo 2', sans-serif;
+}
+
+.selected-region-card {
+    background: rgba(14, 17, 26, 0.9);
+    border: 1px solid var(--border-neon);
+    border-radius: 12px;
+    padding: 14px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: 0 0 20px rgba(102, 252, 241, 0.1);
+}
+
+.region-info-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.region-big-icon {
+    font-size: 2.5rem;
+    line-height: 1;
+}
+
+.region-info-header h4 {
+    font-family: var(--font-title);
+    font-size: 1.1rem;
+    color: #ffffff;
+}
+
+.monsters-pills-row {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.monster-pill {
+    background: rgba(255, 71, 87, 0.1);
+    border: 1px solid rgba(255, 71, 87, 0.3);
+    color: var(--danger-bright);
+    padding: 3px 8px;
+    border-radius: 8px;
+    font-size: 0.74rem;
+    font-family: var(--font-hud);
+    font-weight: 700;
+}
+
+/* ========================================================
+   22. TREINAMENTO — VISUAL AFK COM DUMMY E TIMER
+   ======================================================== */
+.training-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.training-intro {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 16px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+}
+
+.training-intro h3 {
+    font-family: var(--font-title);
+    font-size: 1.2rem;
+    color: var(--neon-cyan);
+}
+
+.training-intro p {
+    font-size: 0.84rem;
+    color: var(--text-muted);
+}
+
+.training-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+}
+
+.active-training-card {
+    background: var(--bg-card);
+    border: 1px solid var(--neon-cyan);
+    border-radius: 14px;
+    padding: 18px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    box-shadow: 0 0 20px rgba(102, 252, 241, 0.15), 0 8px 26px rgba(0, 0, 0, 0.6);
+}
+
+.training-in-progress-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.training-status-pulse {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--success-bright);
+    box-shadow: 0 0 10px var(--success-glow);
+    animation: statusBlink 1.5s ease-in-out infinite;
+    flex-shrink: 0;
+}
+
+@keyframes statusBlink {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(0.85); }
+}
+
+.training-in-progress-header small {
+    font-family: var(--font-hud);
+    font-size: 0.72rem;
+    color: var(--neon-cyan);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.training-in-progress-header h3 {
+    font-family: var(--font-title);
+    font-size: 1.15rem;
+    color: #ffffff;
+}
+
+/* ANIMAÇÃO DO PERSONAGEM VS. DUMMY */
+.training-arena-animation {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    background: radial-gradient(circle at 50% 60%, rgba(31, 40, 51, 0.6) 0%, rgba(7, 8, 11, 0.95) 80%);
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid var(--border-color);
+    min-height: 120px;
+    position: relative;
+    overflow: hidden;
+}
+
+.training-hero-sprite {
+    width: 72px;
+    height: 72px;
+}
+.training-hero-sprite img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.8));
+}
+
+.training-dummy-sprite {
+    width: 60px;
+    height: 60px;
+    opacity: 0.9;
+}
+.training-dummy-sprite img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.8));
+}
+
+.training-sparks {
+    font-size: 1.6rem;
+    animation: sparksAnim 0.6s ease-in-out infinite alternate;
+}
+
+@keyframes sparksAnim {
+    from { transform: scale(0.8) rotate(-10deg); opacity: 0.7; }
+    to   { transform: scale(1.2) rotate(10deg); opacity: 1; }
+}
+
+.anim-training-hero {
+    animation: heroAttack 0.8s ease-in-out infinite alternate;
+}
+
+@keyframes heroAttack {
+    from { transform: translateX(0) rotate(0deg); }
+    to   { transform: translateX(6px) rotate(5deg); }
+}
+
+.anim-training-dummy {
+    animation: dummyHit 0.8s ease-in-out infinite alternate;
+}
+
+@keyframes dummyHit {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(-5deg) translateX(3px); }
+}
+
+/* TIMER & PROGRESSO */
+.timer-display {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+}
+
+.timer-digits {
+    font-family: var(--font-hud);
+    font-size: 2.8rem;
+    font-weight: 900;
+    color: var(--neon-cyan);
+    letter-spacing: 4px;
+    text-shadow: 0 0 16px rgba(102, 252, 241, 0.5);
+    line-height: 1;
+}
+
+.timer-unit {
+    font-size: 0.76rem;
+    color: var(--text-muted);
+    font-family: var(--font-hud);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.training-progress-bar {
+    width: 100%;
+    height: 12px;
+    background: #07080b;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+}
+
+.train-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--neon-teal), var(--neon-cyan));
+    box-shadow: 0 0 12px rgba(102, 252, 241, 0.4);
+    transition: width 1s linear;
+}
+
+.training-rewards-preview {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.reward-pill {
+    font-family: var(--font-hud);
+    font-size: 0.8rem;
+    font-weight: 800;
+    background: rgba(14, 17, 26, 0.9);
+    border: 1px solid var(--border-color);
+    padding: 4px 10px;
+    border-radius: 10px;
+    color: var(--text-muted);
+}
+
+.training-active-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* CARDS DE OPÇÕES DE TREINO */
+.train-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+}
+
+.train-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--border-neon);
+    box-shadow: 0 8px 20px rgba(102, 252, 241, 0.1);
+}
+
+.train-card-icon {
+    font-size: 2rem;
+    text-align: center;
+}
+
+.train-card-title {
+    font-family: var(--font-title);
+    font-size: 0.98rem;
+    color: #ffffff;
+    text-align: center;
+}
+
+.train-reward-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+}
+
+.train-reward-row strong {
+    color: var(--success-bright);
+    font-family: var(--font-hud);
+    font-weight: 800;
+}
+
+/* ========================================================
+   23. LOJA — HEADER & SHOP SECTION
+   ======================================================== */
+.shop-section {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.shop-header-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+/* ========================================================
+   24. SEÇÃO DE AVENTURA — ADICIONAIS (ABA 1)
+   ======================================================== */
+#tabContentAventura h3,
+#tabContentAventura h4 {
+    font-family: var(--font-title);
+}
+
+.adv-idle-box h3 {
+    font-family: var(--font-title);
+    font-size: 1.15rem;
+    color: var(--text-main);
+}
+
+.adv-idle-box p {
+    font-size: 0.84rem;
+    color: var(--text-muted);
+    max-width: 400px;
+}
+
+.combatant-card h4 {
+    font-family: var(--font-hud);
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: #ffffff;
+}
+
+.combatant-hp small {
+    font-family: var(--font-hud);
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    text-align: center;
+}
+
+/* ========================================================
+   25. RESPONSIVIDADE ADICIONAL PARA MOBILE (max-width 600px)
+   ======================================================== */
+@media (max-width: 600px) {
+    .app-layout {
+        padding: 8px 10px 28px 10px;
+    }
+
+    .dungeon-floors-list,
+    .hideout-buildings-grid,
+    .training-grid,
+    .academy-attributes-grid,
+    .paperdoll-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .shop-items-grid {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    }
+
+    .hud-global {
+        top: 4px;
+    }
+
+    .tab-text {
+        display: none;
+    }
+
+    .tab-btn {
+        min-width: 48px;
+        padding: 8px 6px;
+    }
+
+    .tab-icon {
+        font-size: 1.3rem;
+        margin-bottom: 0;
+    }
+
+    .world-map-svg {
+        max-height: 240px;
+    }
+
+    .timer-digits {
+        font-size: 2.2rem;
+    }
+
+    .wheel-canvas-wrapper {
+        width: 260px;
+        height: 260px;
+    }
+    #wheelCanvas {
+        width: 260px !important;
+        height: 260px !important;
+    }
+}
+

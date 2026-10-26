@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <circle cx="50" cy="50" r="46" fill="#0d1117" stroke="#38ef7d" stroke-width="3"/>
+  <!-- Hood/Mask -->
+  <path d="M26 40 C26 24 40 18 50 18 C60 18 74 24 74 40 L74 66 C74 76 64 82 50 82 C36 82 26 76 26 66 Z" fill="#161b22" stroke="#11998e" stroke-width="2"/>
+  <!-- Ninja Headband -->
+  <rect x="26" y="32" width="48" height="12" fill="#21262d" stroke="#38ef7d" stroke-width="1.5"/>
+  <rect x="42" y="34" width="16" height="8" rx="2" fill="#8b949e"/>
+  <!-- Eyes Opening -->
+  <ellipse cx="40" cy="50" rx="6" ry="2.5" fill="#38ef7d"/>
+  <ellipse cx="60" cy="50" rx="6" ry="2.5" fill="#38ef7d"/>
+  <circle cx="40" cy="50" r="1.5" fill="#ffffff"/>
+  <circle cx="60" cy="50" r="1.5" fill="#ffffff"/>
+  <!-- Shuriken -->
+  <path d="M50 68 L53 74 L60 74 L55 78 L57 85 L50 81 L43 85 L45 78 L40 74 L47 74 Z" fill="#58a6ff" opacity="0.85"/>
+</svg>
